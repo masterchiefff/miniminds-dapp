@@ -8,7 +8,7 @@ import MainLayout from '@/components/Layouts/mainLayout';
 
 // Initialize web3 instance
 const web3 = new Web3(window.ethereum);
-const contractAddress = '0x0c8926D3170a2657802CCfdb68Eff372A27d5d12'; // Replace with your deployed contract address
+const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4'; // Replace with your deployed contract address
 
 const courseContract = new web3.eth.Contract(ABI, contractAddress);
 

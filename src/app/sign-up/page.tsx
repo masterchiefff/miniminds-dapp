@@ -7,7 +7,7 @@ import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SessionLayout from '@/components/Layouts/sessionLayout';
 
-const contractAddress = '0x0c8926D3170a2657802CCfdb68Eff372A27d5d12'; 
+const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4'; 
 
 export default function UserRegistration() {
   const [walletAddress, setWalletAddress] = useState('');
@@ -115,7 +115,7 @@ export default function UserRegistration() {
   }
 
   return (
-    <SessionLayout title={'Register to miniminds'} subtitle={'subtitle'} title1={'join the fun'} image={''}>
+    <SessionLayout title={'Register to miniminds'} subtitle={'subtitle'} title1={'join the fun'} image={'https://i.postimg.cc/t4K1pJrb/boy-jumping-air-with-backpack-his-back-608506-11629-1-1-removebg-preview.png'}>
       {!walletAddress ? (
         <div className="text-center">
           <p className="text-red-600 mb-4">Please connect your MetaMask wallet.</p>
@@ -173,9 +173,16 @@ export default function UserRegistration() {
             Register <ArrowRight className="ml-2 h-5 w-5" />
           </button>
         </form>
+        
       )}
 
       {isRegistered && <p className="text-green-600 mt-4 text-center">Registration Successful!</p>}
+      <p className="mt-6 text-yellow-800 text-center">
+        Already have an account?{' '}
+        <Link href="/" className="font-semibold underline">
+          Log in here
+        </Link>
+      </p>
     </SessionLayout>
   );
 }

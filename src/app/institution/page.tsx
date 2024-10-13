@@ -12,7 +12,7 @@ const web3 = new Web3(window.ethereum);
 // Replace with your contract ABI and address
 const contractABI = UserRegistrationABI;
 
-const contractAddress = "0x0c8926D3170a2657802CCfdb68Eff372A27d5d12"; 
+const contractAddress = "0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4"; 
 
 // Create a contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);

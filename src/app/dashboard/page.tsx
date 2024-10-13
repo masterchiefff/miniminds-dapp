@@ -10,13 +10,13 @@ export default function Dashboard() {
   const [isConnected, setIsConnected] = useState(false)
   const [tokenBalance, setTokenBalance] = useState(0)
 
-  // const { isRegistered, loading } = useAuth();
-  // const router = useRouter();
+  const { isRegistered, loading } = useAuth();
+  const router = useRouter();
 
-  // if (!isRegistered) {
-  //   router.push('/'); 
-  //   return null; 
-  // }
+  if (!isRegistered) {
+    router.push('/'); 
+    return null; 
+  }
 
   return (
     <MainLayout>

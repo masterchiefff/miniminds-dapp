@@ -113,7 +113,7 @@ export default function MainLayout({ children, pageTitle, subTitle }) {
         </a>
       </li>
       <li>
-        <a href="/my-courses" className="flex items-center text-yellow-800 hover:text-yellow-600">
+        <a href="/courses/my-courses" className="flex items-center text-yellow-800 hover:text-yellow-600">
           <Book className="h-5 w-5 mr-3" />
           My Courses
         </a>
@@ -138,7 +138,7 @@ export default function MainLayout({ children, pageTitle, subTitle }) {
     <div className="min-h-screen bg-yellow-100 flex">
       {/* Sidebar */}
       <aside className="bg-yellow-300 w-64 p-6 hidden md:block">
-        <h1 className="text-2xl font-bold text-yellow-900 mb-8">FunLearn Web3</h1>
+        <h1 className="text-2xl font-bold text-yellow-900 mb-8">Miniminds</h1>
         <nav>
           <ul className="space-y-4">
             {userRole === 'learner' ? learnerMenu : instructorMenu}

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Web3 from 'web3';
 import SessionLayout from '@/components/Layouts/sessionLayout';
+import Link from 'next/link'
 
 export default function Login() {
   const [isConnected, setIsConnected] = useState(false);
@@ -66,7 +67,14 @@ export default function Login() {
           </>
         ) : (
           <p className="text-yellow-700">Connected as {account}</p>
+
         )}
+        <p className="mt-6 text-yellow-800">
+          New to FunLearn?{' '}
+          <Link href="/sign-up" className="font-semibold underline">
+            Create an account and join the fun!
+          </Link>
+        </p>
     </SessionLayout>
   );
 }
