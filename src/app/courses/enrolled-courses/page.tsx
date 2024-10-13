@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
-import { Star } from 'lucide-react';
 import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import MainLayout from '@/components/Layouts/mainLayout';
 
@@ -18,7 +17,6 @@ type Course = {
 const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
 
 export default function EnrolledCoursesPage() {
-  // Add type definition for Web3 and Contract
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [contract, setContract] = useState<any>(null);
   const [walletAddress, setWalletAddress] = useState('');
@@ -39,7 +37,7 @@ export default function EnrolledCoursesPage() {
         setContract(courseContract);
 
         // Fetch the enrolled courses
-        const courses = await courseContract.methods.getEnrolledCourses(accounts[0]).call();
+        const courses: string[] = await courseContract.methods.getEnrolledCourses(accounts[0]).call();
         const formattedCourses = await Promise.all(
           courses.map(async (courseId: string) => {
             const courseDetails = await courseContract.methods.getCourseDetails(courseId).call();
