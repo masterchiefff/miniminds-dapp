@@ -1,187 +1,181 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import contractABI from '@/contracts/UserRegistrationABI.json'; 
 import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import SessionLayout from '@/components/Layouts/sessionLayout';
-import Link from 'next/link';
 
-const UserRegistration = () => {
-  const [web3, setWeb3] = useState(null);
-  const [account, setAccount] = useState(null);
-  const [contract, setContract] = useState(null);
+const contractAddress = '0x0c8926D3170a2657802CCfdb68Eff372A27d5d12'; 
 
-  // Form state
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    birthdate: '',
-    password: '',
-  });
-=
-  const contractAddress = '0x384f50459c350f21AdD079449BD07F8B8dfBEC51';
-  const connectWallet = async () => {
+export default function UserRegistration() {
+  const [walletAddress, setWalletAddress] = useState('');
+  const [institutions, setInstitutions] = useState([]);
+  const [selectedInstitution, setSelectedInstitution] = useState('');
+  const [role, setRole] = useState('learner'); // Default role is learner
+  const [isRegistered, setIsRegistered] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    loadWeb3();
+    fetchInstitutions();
+  }, []);
+
+  async function loadWeb3() {
     if (window.ethereum) {
       try {
-        const provider = new Web3(window.ethereum);
-        const web3Instance = new Web3(provider);
+        const web3 = new Web3('https://sepolia.base.org');
         await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const accounts = await web3Instance.eth.getAccounts();
-        console.log(accounts)
-
-        const instance = new web3Instance.eth.Contract(contractABI, contractAddress);
-        console.log(instance)
-
-        setWeb3(web3Instance);
-        setAccount(accounts[0]);
-        setContract(instance);
+        const accounts = await web3.eth.getAccounts();
+        setWalletAddress(accounts[0]);
       } catch (error) {
-        console.error('Error connecting to wallet:', error);
+        alert('MetaMask connection failed.');
       }
     } else {
-      alert('Please install MetaMask to interact with the DApp.');
+      alert('MetaMask not detected.');
     }
-  };
+  }
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
-  };
+  async function fetchInstitutions() {
+    const web3 = new Web3(window.ethereum);
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
+    
+    try {
+      const institutionCount = await contract.methods.institutionCount().call();
+      const fetchedInstitutions = [];
+      
+      for (let i = 0; i < institutionCount; i++) {
+        const institution = await contract.methods.institutions(i).call();
+        if (institution.isActive) {
+          fetchedInstitutions.push({ id: i, name: institution.name });
+        }
+      }
 
-  const registerUser = async (e) => {
+      setInstitutions(fetchedInstitutions);
+    } catch (error) {
+      alert('Error fetching institutions from the contract.');
+    }
+  }
+
+  async function handleRegister(e) {
     e.preventDefault();
-    if (contract && account) {
-      try {
-        await contract.methods.registerUser(0).send({ from: account });
-        console.log('Form Data:', formData);
-
-        alert('User registered successfully on the blockchain!');
-      } catch (error) {
-        console.error('Error registering user:', error);
-      }
-    } else {
-      alert('Please connect your wallet first.');
+    
+    if (!walletAddress) {
+      alert('Please connect your wallet.');
+      return;
     }
-  };
+
+    if (!selectedInstitution) {
+      alert('Please select an institution.');
+      return;
+    }
+
+    try {
+      const web3 = new Web3(window.ethereum);
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+      let gasEstimate;
+      let method;
+
+      if (role === 'instructor') {
+        method = contract.methods.registerInstructor(selectedInstitution);
+        gasEstimate = await method.estimateGas({ from: walletAddress });
+      } else {
+        method = contract.methods.registerUser(selectedInstitution);
+        gasEstimate = await method.estimateGas({ from: walletAddress });
+      }
+
+      // Send transaction
+      await method.send({ from: walletAddress, gas: gasEstimate });
+
+      alert('User registered successfully!');
+      setIsRegistered(true);
+
+      // Redirect to dashboard after registration
+      router.push('/dashboard');
+    } catch (error) {
+      alert(`Registration failed: ${error.data.message}`);
+    }
+  }
+
+  async function handleConnectWallet() {
+    try {
+      if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await web3.eth.getAccounts();
+        setWalletAddress(accounts[0]);
+      } else {
+        alert('MetaMask not detected.');
+      }
+    } catch (error) {
+      alert('Failed to connect MetaMask.');
+    }
+  }
 
   return (
-    <SessionLayout
-      title="Create Your Miniminds Account"
-      subtitle="Start your exciting learning journey today. Fill out the form below to get started!"
-      title1="Join The Fun"
-      image="https://i.postimg.cc/7YLJNpCF/image-removebg-preview-2.png"
-    >
-      <form className="space-y-4" onSubmit={registerUser}>
-        <div className="grid grid-cols-2 gap-4">
+    <SessionLayout title={'Register to miniminds'} subtitle={'subtitle'} title1={'join the fun'} image={''}>
+      {!walletAddress ? (
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Please connect your MetaMask wallet.</p>
+          <button
+            onClick={handleConnectWallet}
+            className="bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg"
+          >
+            Connect MetaMask
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleRegister} className="space-y-4">
           <div>
-            <label htmlFor="firstName" className="block text-yellow-800 font-semibold mb-2">
-              First Name
+            <label htmlFor="institution" className="block text-yellow-800 font-semibold mb-2">
+              Select Institution
             </label>
-            <input
-              type="text"
-              id="firstName"
+            <select
+              id="institution"
+              value={selectedInstitution}
+              onChange={(e) => setSelectedInstitution(e.target.value)}
               className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-              placeholder="Your first name"
-              value={formData.firstName}
-              onChange={handleInputChange}
-            />
+              required
+            >
+              <option value="">Select an institution</option>
+              {institutions.map((institution) => (
+                <option key={institution.id} value={institution.id}>
+                  {institution.name}
+                </option>
+              ))}
+            </select>
           </div>
+
           <div>
-            <label htmlFor="lastName" className="block text-yellow-800 font-semibold mb-2">
-              Last Name
+            <label htmlFor="role" className="block text-yellow-800 font-semibold mb-2">
+              Select Role
             </label>
-            <input
-              type="text"
-              id="lastName"
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => {
+                setRole(e.target.value);
+                console.log('Role selected:', e.target.value); 
+              }}
               className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-              placeholder="Your last name"
-              value={formData.lastName}
-              onChange={handleInputChange}
-            />
+            >
+              <option value="learner">Learner</option>
+              <option value="instructor">Instructor</option>
+            </select>
           </div>
-        </div>
-        <div>
-          <label htmlFor="username" className="block text-yellow-800 font-semibold mb-2">
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-            placeholder="Choose a fun username"
-            value={formData.username}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="email" className="block text-yellow-800 font-semibold mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-            placeholder="Your email address"
-            value={formData.email}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="birthdate" className="block text-yellow-800 font-semibold mb-2">
-            Birthdate
-          </label>
-          <input
-            type="date"
-            id="birthdate"
-            className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800"
-            value={formData.birthdate}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-yellow-800 font-semibold mb-2">
-            Create Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-            placeholder="Create a secure password"
-            value={formData.password}
-            onChange={handleInputChange}
-          />
-        </div>
 
-        <button
-          type="button"
-          onClick={connectWallet}
-          className="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition duration-300 mb-4"
-        >
-          Connect Wallet
-        </button>
+          <button
+            type="submit"
+            className="w-full bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center"
+          >
+            Register <ArrowRight className="ml-2 h-5 w-5" />
+          </button>
+        </form>
+      )}
 
-        <button
-          type="submit"
-          className="w-full bg-white text-yellow-800 font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 transition duration-300 flex items-center justify-center"
-        >
-          Start Learning Now <ArrowRight className="ml-2 h-5 w-5" />
-        </button>
-      </form>
-
-      <p className="mt-6 text-yellow-800 text-center">
-        Already have an account?{' '}
-        <Link href="/" className="font-semibold underline">
-          Log in here
-        </Link>
-      </p>
+      {isRegistered && <p className="text-green-600 mt-4 text-center">Registration Successful!</p>}
     </SessionLayout>
   );
-};
-
-export default UserRegistration;
+}
