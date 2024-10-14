@@ -17,14 +17,7 @@ type Course = {
 const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
 
 export default function EnrolledCoursesPage() {
-  const [web3, setWeb3] = useState<Web3 | null>(null);
-  const [contract, setContract] = useState<any>(null);
-  const [walletAddress, setWalletAddress] = useState('');
-  const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
 
-  // Fetch user details and enrolled courses
-  const fetchUserDetailsAndCourses = async () => {
-  //   if (window.ethereum) {
   //     try {
   //       const web3Instance = new Web3(window.ethereum);
   //       setWeb3(web3Instance);
@@ -62,10 +55,9 @@ export default function EnrolledCoursesPage() {
 
   // useEffect(() => {
   //   fetchUserDetailsAndCourses();
-  // }, []);
-
+  // }, []
   return (
-    <MainLayout>
+    <MainLayout pageTitle={'Enrolled Course'} subTitle={'These are your enrolled course'}>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         enrolled courses coming soon
       </div>
