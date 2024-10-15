@@ -1,25 +1,25 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useAuth } from '@/hooks/authentication';
 import { useRouter } from 'next/navigation';
-import { Book, Calendar, Trophy, BarChart2, Bell, Search, User, Home, Bookmark, Settings, HelpCircle, LogOut, Wallet } from 'lucide-react'
+import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
 import MainLayout from '@/components/Layouts/mainLayout';
 
-export default function Dashboard() {
-  const [isConnected, setIsConnected] = useState(false)
-  const [tokenBalance, setTokenBalance] = useState(0)
+const Dashboard: React.FC = () => {
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [tokenBalance, setTokenBalance] = useState<number>(0);
 
-  const { isRegistered, loading } = useAuth();
-  const router = useRouter();
+  // const { isRegistered, loading } = useAuth();
+  // const router = useRouter();
 
-  if (!isRegistered) {
-    router.push('/'); 
-    return null; 
-  }
+  // if (!isRegistered) {
+  //   router.push('/'); 
+  //   return null; 
+  // }
 
   return (
-    <MainLayout>
+    <MainLayout pageTitle={'Dashboard'} subTitle={undefined}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-yellow-800 mb-4 flex items-center">
@@ -129,5 +129,7 @@ export default function Dashboard() {
         </div>
       </div>
     </MainLayout>
-  )
-}
+  );
+};
+
+export default Dashboard;
