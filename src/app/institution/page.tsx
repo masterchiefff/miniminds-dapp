@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Web3 from 'web3';
 import { useRouter } from 'next/navigation';
@@ -8,16 +8,7 @@ import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
 
 interface Institution {
   name: string;
-  // Add other properties based on your contract structure
 }
-
-const web3 = new Web3(window.ethereum);
-
-// Replace with your contract ABI and address
-const contractABI = UserRegistrationABI;
-const contractAddress = "0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4"; 
-
-const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 const InstitutionRegistration: React.FC = () => {
   const [institutionName, setInstitutionName] = useState<string>('');
@@ -26,17 +17,33 @@ const InstitutionRegistration: React.FC = () => {
   const [address, setAddress] = useState<string>('');
   const [institutionType, setInstitutionType] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [institutionIdToActivate, setInstitutionIdToActivate] = useState<string>(''); // State for institution ID
+  const [institutionIdToActivate, setInstitutionIdToActivate] = useState<string>('');
+  const [contract, setContract] = useState<any>(null); // State for the contract instance
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.ethereum) {
+      const web3 = new Web3(window.ethereum);
+      const contractAddress = "0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4";
+      const contractInstance = new web3.eth.Contract(UserRegistrationABI, contractAddress);
+      setContract(contractInstance);
+    } else {
+      console.error('Ethereum wallet is not available. Please install MetaMask or another wallet.');
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!contract) {
+      alert('Contract is not available. Please try again later.');
+      return;
+    }
 
     try {
       const institutionCount: string = await contract.methods.institutionCount().call();
       let institutionExists = false;
 
-      console.log(institutionCount);
       for (let i = 0; i < parseInt(institutionCount); i++) {
         const institution: Institution = await contract.methods.institutions(i).call();
         if (institution.name === institutionName) {
@@ -53,7 +60,7 @@ const InstitutionRegistration: React.FC = () => {
 
         await contract.methods.createInstitution(institutionName).send({ from: creator });
         alert('Institution registered successfully!');
-        router.push('/sign-up'); // Redirect to a success page or another route
+        router.push('/sign-up');
       }
     } catch (error) {
       console.error('Error registering institution:', error);
@@ -62,6 +69,11 @@ const InstitutionRegistration: React.FC = () => {
   };
 
   const handleActivateInstitution = async () => {
+    if (!contract) {
+      alert('Contract is not available. Please try again later.');
+      return;
+    }
+
     try {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const account = accounts[0];
@@ -73,9 +85,7 @@ const InstitutionRegistration: React.FC = () => {
       }
 
       const gasEstimate = await contract.methods.activateInstitution(institutionId).estimateGas({ from: account });
-
       await contract.methods.activateInstitution(institutionId).send({ from: account, gas: gasEstimate.toString() });
-
       alert('Institution activated successfully!');
     } catch (error) {
       console.error('Error activating institution:', error);
