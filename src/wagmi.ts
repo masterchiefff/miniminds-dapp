@@ -1,14 +1,20 @@
-import { http, cookieStorage, createConfig, createStorage } from 'wagmi'
-import { base } from 'wagmi/chains'
-import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
+import { http, cookieStorage, createConfig, createStorage } from 'wagmi';
+import { base } from 'wagmi/chains';
+import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 
 export function getConfig() {
+  const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
+
+  if (!projectId) {
+    throw new Error('NEXT_PUBLIC_WC_PROJECT_ID is not defined');
+  }
+
   return createConfig({
-    chains: [ base ],
+    chains: [base],
     connectors: [
       injected(),
       coinbaseWallet(),
-      walletConnect({ projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID }),
+      walletConnect({ projectId }), // projectId is now guaranteed to be a string
     ],
     storage: createStorage({
       storage: cookieStorage,
@@ -16,9 +22,8 @@ export function getConfig() {
     ssr: true,
     transports: {
       [base.id]: http(),
-      // [sepolia.id]: http(),
     },
-  })
+  });
 }
 
 declare module 'wagmi' {
@@ -26,26 +31,3 @@ declare module 'wagmi' {
     config: ReturnType<typeof getConfig>
   }
 }
-
-
-// import { http, createConfig } from 'wagmi';
-// import { base } from 'wagmi/chains';
-// import { coinbaseWallet } from 'wagmi/connectors';
- 
-// export function getConfig() {
-//   return createConfig({
-//     chains: [base],
-//     multiInjectedProviderDiscovery: false,
-//     connectors: [
-//       coinbaseWallet({
-//         appName: 'miniminds',
-//         preference: 'smartWalletOnly', 
-//         version: '4',
-//       }),
-//     ],
-//     ssr: true,
-//     transports: {
-//       [base.id]: http(),
-//     },
-//   });
-// }

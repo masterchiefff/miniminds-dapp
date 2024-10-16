@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3'; // Import web3.js
 import { useRouter } from 'next/navigation';
 import { Book, Home, Bookmark, Trophy, Settings, HelpCircle, LogOut, Bell } from 'lucide-react';
-import ABI from '@/contracts/UserRegistrationABI.json'
+import ABI from '@/contracts/UserRegistrationABI.json';
 import {
   Address,
   Avatar,
@@ -21,14 +21,26 @@ import {
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
 
-export default function MainLayout({ children, pageTitle, subTitle }) {
+// Define the interface for user details returned from the contract
+interface UserDetails {
+  isInstructor: boolean; // Adjust this type if necessary
+  // Add other properties if necessary
+}
+
+interface MainLayoutProps {
+  children: React.ReactNode; // Explicitly typing the children prop
+  pageTitle: string;
+  subTitle: string;
+}
+
+export default function MainLayout({ children, pageTitle, subTitle }: MainLayoutProps) {
   const [isConnected, setIsConnected] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [userRole, setUserRole] = useState('learner'); // Default to learner
+  const [userRole, setUserRole] = useState<'learner' | 'instructor'>('learner'); // Default to learner
   const router = useRouter();
 
   // Function to fetch user role from contract/ABI
-  async function fetchUserRoleFromContract() {
+  async function fetchUserRoleFromContract(): Promise<boolean> { // Adjust return type as needed
     if (typeof window.ethereum !== 'undefined') {
       const web3 = new Web3(window.ethereum);
       await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -42,23 +54,22 @@ export default function MainLayout({ children, pageTitle, subTitle }) {
 
       try {
         // Call a method from the contract to get the user role
-        const role = await contract.methods.getUserDetails(userAddress).call();
-        console.log(role)
-        return role.isInstructor; // Returns 'instructor' or 'learner'
+        const role: UserDetails = await contract.methods.getUserDetails(userAddress).call();
+        console.log(role);
+        return role.isInstructor; // Returns true if instructor, false if learner
       } catch (error) {
         console.error('Error fetching user role:', error);
-        return 'learner'; // Default role in case of error
+        return false; // Default to 'learner' in case of error
       }
     }
+    return false; // Return false if no Ethereum provider is found
   }
 
   useEffect(() => {
     // Fetch the user role after MetaMask connection
     async function fetchUserRole() {
       const role = await fetchUserRoleFromContract();
-      setUserRole(role); // Set the role ('learner' or 'instructor')
-
-      console.log(userRole);
+      setUserRole(role ? 'instructor' : 'learner'); // Adjust based on your logic
     }
     fetchUserRole();
   }, []);
@@ -124,7 +135,6 @@ export default function MainLayout({ children, pageTitle, subTitle }) {
           Institution Courses
         </a>
       </li>
-
       <li>
         <a href="/courses/enrolled-courses" className="flex items-center text-yellow-800 hover:text-yellow-600">
           <Book className="h-5 w-5 mr-3" />
