@@ -1,43 +1,44 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Web3 from 'web3';
 import { useRouter } from 'next/navigation';
-import UserRegistrationABI from '@/contracts/UserRegistrationABI.json'
+import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
 
-// Initialize Web3
+interface Institution {
+  name: string;
+  // Add other properties based on your contract structure
+}
+
 const web3 = new Web3(window.ethereum);
 
 // Replace with your contract ABI and address
 const contractABI = UserRegistrationABI;
-
 const contractAddress = "0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4"; 
 
-// Create a contract instance
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-export default function InstitutionRegistration() {
-const [institutionName, setInstitutionName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const [institutionType, setInstitutionType] = useState('');
-  const [password, setPassword] = useState('');
-  const [institutionIdToActivate, setInstitutionIdToActivate] = useState(''); // State for institution ID
+const InstitutionRegistration: React.FC = () => {
+  const [institutionName, setInstitutionName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const [institutionType, setInstitutionType] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [institutionIdToActivate, setInstitutionIdToActivate] = useState<string>(''); // State for institution ID
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const institutionCount = await contract.methods.institutionCount().call();
+      const institutionCount: string = await contract.methods.institutionCount().call();
       let institutionExists = false;
 
-
-      console.log(institutionCount)
-      for (let i = 0; i < institutionCount; i++) {
-        const institution = await contract.methods.institutions(i).call();
+      console.log(institutionCount);
+      for (let i = 0; i < parseInt(institutionCount); i++) {
+        const institution: Institution = await contract.methods.institutions(i).call();
         if (institution.name === institutionName) {
           institutionExists = true;
           break;
@@ -62,28 +63,25 @@ const [institutionName, setInstitutionName] = useState('');
 
   const handleActivateInstitution = async () => {
     try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const account = accounts[0];
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const account = accounts[0];
 
-        // Convert institutionIdToActivate to uint256
-        const institutionId = parseInt(institutionIdToActivate, 10);
-        if (isNaN(institutionId) || institutionId < 0) {
-            alert('Please enter a valid Institution ID.');
-            return;
-        }
+      const institutionId = parseInt(institutionIdToActivate, 10);
+      if (isNaN(institutionId) || institutionId < 0) {
+        alert('Please enter a valid Institution ID.');
+        return;
+      }
 
-        // Estimate gas for the transaction
-        const gasEstimate = await contract.methods.activateInstitution(institutionId).estimateGas({ from: account });
+      const gasEstimate = await contract.methods.activateInstitution(institutionId).estimateGas({ from: account });
 
-        // Send transaction to activate the institution
-        await contract.methods.activateInstitution(institutionId).send({ from: account, gas: gasEstimate });
+      await contract.methods.activateInstitution(institutionId).send({ from: account, gas: gasEstimate.toString() });
 
-        alert('Institution activated successfully!');
+      alert('Institution activated successfully!');
     } catch (error) {
-        console.error('Error activating institution:', error);
-        alert('An error occurred while activating the institution. Please try again.');
+      console.error('Error activating institution:', error);
+      alert('An error occurred while activating the institution. Please try again.');
     }
-};
+  };
 
   return (
     <div className="min-h-screen bg-yellow-300 flex items-center justify-center p-4">
@@ -178,13 +176,6 @@ const [institutionName, setInstitutionName] = useState('');
                 placeholder="Create a secure password"
               />
             </div>
-            {/* <button
-              type="button" // Use button type instead of submit
-              onClick={handleActivateInstitution}
-              className="w-full bg-white text-yellow-800 font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 transition duration-300"
-            >
-              Activate Institution
-            </button> */}
             <button
               type="submit"
               className="w-full bg-white text-yellow-800 font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 transition duration-300"
@@ -219,3 +210,5 @@ const [institutionName, setInstitutionName] = useState('');
     </div>
   );
 }
+
+export default InstitutionRegistration;
