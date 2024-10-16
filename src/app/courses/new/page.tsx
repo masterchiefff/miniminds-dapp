@@ -2,7 +2,6 @@
 
 import Web3 from 'web3';
 import { useState, ChangeEvent } from 'react';
-
 import ABI from '@/contracts/UserRegistrationABI.json'; // Adjust the path as needed
 import MainLayout from '@/components/Layouts/mainLayout';
 
@@ -28,6 +27,7 @@ const CreateCourse = () => {
     const [courseModules, setCourseModules] = useState<Module[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [institutionIdToActivate, setInstitutionIdToActivate] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false); // Loading state
 
     // Initialize web3 instance
     const web3 = new Web3(window.ethereum);
@@ -39,18 +39,19 @@ const CreateCourse = () => {
         (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setter(e.target.value);
 
     const handleCreateCourse = async () => {
+        setLoading(true);
+        setErrorMessage(''); // Clear previous error message
         try {
-            // Ensure the user is connected to their MetaMask wallet
             await window.ethereum.request({ method: 'eth_requestAccounts' });
             const accounts = await web3.eth.getAccounts();
             const account = accounts[0];
-    
+
             // Validate course price
             const priceInWei = web3.utils.toWei(coursePrice, 'ether').toString();
             if (parseFloat(priceInWei) <= 0) {
                 throw new Error('Course price must be greater than zero.');
             }
-    
+
             // Prepare course data
             const modulesData = courseModules.map(module => ({
                 title: module.title,
@@ -61,7 +62,7 @@ const CreateCourse = () => {
                     duration: lesson.duration,
                 })),
             }));
-    
+
             // Estimate gas for the transaction
             const gasEstimate = await courseContract.methods.createCourse(
                 courseTitle,
@@ -71,7 +72,7 @@ const CreateCourse = () => {
                 courseDuration,
                 modulesData
             ).estimateGas({ from: account });
-    
+
             // Send transaction to create course
             const response = await courseContract.methods.createCourse(
                 courseTitle,
@@ -80,37 +81,37 @@ const CreateCourse = () => {
                 priceInWei,
                 courseDuration,
                 modulesData
-            ).send({ from: account, gas: gasEstimate });
-    
+            ).send({ from: account, gas: gasEstimate.toString() });
+
             console.log('Course created successfully:', response);
-    
         } catch (error: any) {
             console.error('Error creating course:', error.message);
-            setErrorMessage(error.message);  // Set error message to display
+            setErrorMessage(error.message); // Set error message to display
+        } finally {
+            setLoading(false); // Reset loading state
         }
     };
-    
 
     const handleActivateInstitution = async () => {
+        setErrorMessage(''); // Clear previous error message
         try {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const account = accounts[0];
 
-            // Convert institutionIdToActivate to uint256
+            // Convert institutionIdToActivate to uint256 and ensure it is a string
             const institutionId = parseInt(institutionIdToActivate, 10);
             if (isNaN(institutionId) || institutionId < 0) {
-                alert('Please enter a valid Institution ID.');
-                return;
+                throw new Error('Please enter a valid Institution ID.');
             }
 
-            const gasEstimate = await courseContract.methods.activateInstitution(institutionId).estimateGas({ from: account });
+            const gasEstimate = await courseContract.methods.activateInstitution(institutionId.toString()).estimateGas({ from: account });
 
-            await courseContract.methods.activateInstitution(institutionId).send({ from: account, gas: gasEstimate });
+            await courseContract.methods.activateInstitution(institutionId.toString()).send({ from: account, gas: gasEstimate.toString() });
 
             alert('Institution activated successfully!');
         } catch (error: any) {
             console.error('Error activating institution:', error);
-            alert('An error occurred while activating the institution. Please try again.');
+            setErrorMessage('An error occurred while activating the institution. Please try again.');
         }
     };
 
@@ -158,7 +159,9 @@ const CreateCourse = () => {
 
                 <button onClick={handleActivateInstitution}>Activate Institution</button>
                 {/* Add module input fields as necessary */}
-                <button onClick={handleCreateCourse}>Create Course</button>
+                <button onClick={handleCreateCourse} disabled={loading}>
+                    {loading ? 'Creating Course...' : 'Create Course'}
+                </button>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             </div>
         </MainLayout>
