@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
   // }
 
   return (
-    <MainLayout pageTitle={'Dashboard'} subTitle={undefined}>
+    <MainLayout pageTitle={'Dashboard'} subTitle={'summary of your activities'}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-yellow-800 mb-4 flex items-center">
