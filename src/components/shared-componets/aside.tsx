@@ -4,13 +4,13 @@ import AsideItems from './aside-items';
 
 const menuItems = [
     {
-      link: '/dashboard',
+      link: '/dashboard/learner',
       Icon: Home,
       title: 'Dashboard',
       color: 'blue'
     },
     {
-        link: '/learn',
+        link: '/courses/learner',
         Icon: Book,
         title: 'Learn',
         color: 'green'

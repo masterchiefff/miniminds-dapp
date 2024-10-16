@@ -14,7 +14,6 @@ export const useAuth = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.ethereum) {
-      // Initialize web3 instance here
       web3 = new Web3(window.ethereum);
     }
   }, []);
@@ -25,7 +24,6 @@ export const useAuth = () => {
 
       if (accounts.length > 0) {
         const walletAddress = accounts[0];
-        // Initialize the contract with the web3 instance
         const contract = new web3.eth.Contract(contractABI, contractAddress);
 
         try {

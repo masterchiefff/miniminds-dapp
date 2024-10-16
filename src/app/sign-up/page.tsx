@@ -114,8 +114,11 @@ export default function UserRegistration() {
       alert('User registered successfully!');
       setIsRegistered(true);
 
-      // Redirect to dashboard after registration
-      router.push('/dashboard');
+      if (role === 'instructor') {
+        router.push('/dashboard');
+      } else {
+        router.push('/dashboard/learner');
+      }
     } catch (error: any) {
       alert(`Registration failed: ${error.data.message}`);
     }

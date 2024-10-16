@@ -23,7 +23,6 @@ import {
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
 
-// Define the types for component state
 interface LoginState {
   isConnected: boolean;
   account: string | null;
@@ -36,9 +35,8 @@ export default function Login() {
   });
   const router = useRouter();
   const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
-  const [contract, setContract] = useState<any>(null); // State to hold the contract instance
+  const [contract, setContract] = useState<any>(null); 
 
-  // Function to connect to MetaMask
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
@@ -49,12 +47,10 @@ export default function Login() {
         if (accounts.length > 0) {
           setState({ isConnected: true, account: accounts[0] });
 
-          // Initialize the contract and store it in the state
           const userContract = new web3.eth.Contract(userRegistrationABI, contractAddress);
           setContract(userContract);
 
-          // Fetch user role after connecting
-          await handleLogin(accounts[0], userContract); // Pass the account and contract instance here
+          await handleLogin(accounts[0], userContract); 
         }
       } catch (error) {
         console.error("MetaMask connection failed:", error);
@@ -64,7 +60,6 @@ export default function Login() {
     }
   };
 
-  // Handle login action and redirect based on user role
   const handleLogin = async (walletAddress: string, userContract: any) => {
     if (!userContract) {
       console.error("Contract is not initialized.");
@@ -72,15 +67,13 @@ export default function Login() {
     }
 
     try {
-      // Call the smart contract method with the appropriate arguments
-      const userRole = await userContract.methods.getUserDetails(walletAddress).call();
-      console.log('User Role:', userRole); // Log the user role
+      const userRole = await userContract.methods.getUserDetails(walletAddress).call(); 
+      console.log(userRole)
 
-      // Redirect based on the user role
       if (userRole.isInstructor) {
-        router.push('/dashboard/'); // Redirect for instructor
+        router.push('/dashboard/'); 
       } else if (!userRole.isInstructor) {
-        router.push('/dashboard/learner'); // Redirect for learner
+        router.push('/dashboard/learner');
       } else {
         console.log("User role is not recognized.");
       }

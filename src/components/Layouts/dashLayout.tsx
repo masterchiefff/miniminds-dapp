@@ -2,7 +2,7 @@ import Aside from "../shared-componets/aside";
 import { Book, Brain, Coins, Palette, Star, Trophy } from 'lucide-react';
 
 interface DashLayoutProps {
-    children: React.ReactNode; // Type for children prop
+    children: React.ReactNode; 
 }
 
 const DashLayout: React.FC<DashLayoutProps> = ({ children }) => {

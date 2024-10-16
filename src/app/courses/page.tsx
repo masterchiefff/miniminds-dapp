@@ -8,34 +8,50 @@ import MainLayout from '@/components/Layouts/mainLayout';
 
 const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4'; 
 
-export default function CoursesPage() {
-  const [tokenBalance, setTokenBalance] = useState(0);
-  const [courses, setCourses] = useState([]);
-  const [web3, setWeb3] = useState(null);
-  const [contract, setContract] = useState(null);
-  const [userInstitutionId, setUserInstitutionId] = useState(null);
-  const [walletAddress, setWalletAddress] = useState('');
-  const [enrollmentStatus, setEnrollmentStatus] = useState('');
-  const [courseEnrollments, setCourseEnrollments] = useState({});
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  level: string;
+  duration: string;
+  rating: string;
+  students: number;
+  tokenPrice: string;
+  courseId: number;
+}
+
+type UserDetails = {
+  institutionId: number; 
+};
+
+export default function CoursesPage(): JSX.Element {
+  const [tokenBalance, setTokenBalance] = useState<string>('0');
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [web3, setWeb3] = useState<Web3 | null>(null);
+  const [contract, setContract] = useState<any>(null);
+  const [userInstitutionId, setUserInstitutionId] = useState<number | null>(null);
+  const [walletAddress, setWalletAddress] = useState<string>('');
+  const [enrollmentStatus, setEnrollmentStatus] = useState<string>('');
+  const [courseEnrollments, setCourseEnrollments] = useState<Record<number, boolean>>({});
 
   const fetchUserDetails = async () => {
     if (window.ethereum) {
       try {
         const web3Instance = new Web3(window.ethereum);
         setWeb3(web3Instance);
-        
+  
         const accounts = await web3Instance.eth.getAccounts();
         setWalletAddress(accounts[0]);
-        
+  
         const courseContract = new web3Instance.eth.Contract(UserRegistrationABI, contractAddress);
         setContract(courseContract);
-
+  
         const balance = await web3Instance.eth.getBalance(accounts[0]);
         setTokenBalance(web3Instance.utils.fromWei(balance, 'ether'));
-
-        const userDetails = await courseContract.methods.getUserDetails(accounts[0]).call();
-        setUserInstitutionId(userDetails.institutionId);
-        
+  
+        // Fetch user details with type assertion
+        const userDetails: UserDetails = await courseContract.methods.getUserDetails(accounts[0]).call() as UserDetails;
+        setUserInstitutionId(userDetails.institutionId); // Assign institutionId
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
@@ -48,9 +64,9 @@ export default function CoursesPage() {
     if (contract && userInstitutionId !== null) {
       try {
         const allCourses = await contract.methods.getAllCourses().call();
-        const filteredCourses = allCourses.filter(course => course.institutionId === userInstitutionId);
+        const filteredCourses = allCourses.filter((course: any) => course.institutionId === userInstitutionId);
 
-        const formattedCourses = filteredCourses.map((course, index) => ({
+        const formattedCourses: Course[] = filteredCourses.map((course: any, index: number) => ({
           id: index, // This represents the index in the filtered list
           title: course.title,
           description: course.description,
@@ -58,7 +74,7 @@ export default function CoursesPage() {
           duration: `${Math.floor(Math.random() * 8) + 4} weeks`, 
           rating: (Math.random() * 0.5 + 4.5).toFixed(1), 
           students: Math.floor(Math.random() * 1000) + 500, 
-          tokenPrice: web3.utils.fromWei(course.mintingPrice, 'ether'), 
+          tokenPrice: web3!.utils.fromWei(course.mintingPrice, 'ether'), 
           courseId: filteredCourses[index].id // Assuming course.id corresponds to the course ID in the contract
         }));
 
@@ -69,17 +85,17 @@ export default function CoursesPage() {
     }
   };
 
-  const enrollInCourse = async (courseId) => {
+  const enrollInCourse = async (courseId: number) => {
     if (contract && walletAddress) {
       try {
         setEnrollmentStatus('Enrolling...');
-        const tx = await contract.methods.enrollInCourse(0).send({ from: walletAddress });
+        const tx = await contract.methods.enrollInCourse(courseId).send({ from: walletAddress });
         await tx;
   
         setEnrollmentStatus('Successfully enrolled in the course!');
         alert('You have successfully enrolled in the course!');
   
-        setCourseEnrollments(prevState => ({ ...prevState, [0]: true }));
+        setCourseEnrollments(prevState => ({ ...prevState, [courseId]: true }));
   
       } catch (error) {
         console.error('Error enrolling in course:', error);
@@ -88,7 +104,6 @@ export default function CoursesPage() {
       }
     }
   };
-  
 
   useEffect(() => {
     fetchUserDetails();
