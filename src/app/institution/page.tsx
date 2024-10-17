@@ -6,10 +6,11 @@ import Web3 from 'web3';
 import { useRouter } from 'next/navigation';
 import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+//import { db } from '../lib/firebase';
 import bcrypt from 'bcryptjs';
-//import { addUserData } from '/firestore'; 
-import {}
+import { addUserData } from '../../lib/firestore.js'; 
+
+
 
 interface Institution {
   name: string;
