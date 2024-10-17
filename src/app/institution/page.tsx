@@ -6,21 +6,13 @@ import Web3 from 'web3';
 import { useRouter } from 'next/navigation';
 import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from 'firebase/firebase';
+import { db } from 'firebase/firestore';
 import bcrypt from 'bcryptjs';
+
 
 interface Institution {
   name: string;
 }
-
-type Contract = {
-  methods: {
-    institutionCount: () => { call: () => Promise<string> };
-    institutions: (index: number) => { call: () => Promise<Institution> };
-    createInstitution: (name: string, password: string) => { send: (options: { from: string }) => Promise<any> };
-    activateInstitution: (id: number) => { send: (options: { from: string; gas: string }) => Promise<any> };
-  };
-};
 
 const InstitutionRegistration: React.FC = () => {
   const [institutionName, setInstitutionName] = useState<string>('');
@@ -30,14 +22,13 @@ const InstitutionRegistration: React.FC = () => {
   const [institutionType, setInstitutionType] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [institutionIdToActivate, setInstitutionIdToActivate] = useState<string>('');
-  const [contract, setContract] = useState<Contract | null>(null); // State for the contract instance
-  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const [contract, setContract] = useState<any>(null); // State for the contract instance
   const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.ethereum) {
       const web3 = new Web3(window.ethereum);
-      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || ""; // Use environment variable
+      const contractAddress = "0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4";
       const contractInstance = new web3.eth.Contract(UserRegistrationABI, contractAddress);
       setContract(contractInstance);
     } else {
@@ -52,8 +43,6 @@ const InstitutionRegistration: React.FC = () => {
       alert('Contract is not available. Please try again later.');
       return;
     }
-
-    setLoading(true); // Set loading to true
 
     try {
       const institutionCount: string = await contract.methods.institutionCount().call();
@@ -70,24 +59,34 @@ const InstitutionRegistration: React.FC = () => {
       if (institutionExists) {
         alert('An institution with this name already exists. Please choose a different name.');
       } else {
-        // Hash the password before proceeding
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
-
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         const creator = accounts[0];
 
-        // Pass the hashed password to the contract or save it to the database
-        await contract.methods.createInstitution(institutionName, hashedPassword).send({ from: creator });
+        await contract.methods.createInstitution(institutionName).send({ from: creator });
         alert('Institution registered successfully!');
+
+        // Hash the password before saving
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
+        // Save institution details in Firebase
+        await addDoc(collection(db, 'institutions'), {
+          name: institutionName,
+          email: email,
+          phone: phone,
+          address: address,
+          institutionType: institutionType,
+          password: hashedPassword, // Store the hashed password
+          createdAt: new Date(),
+        });
+
+        alert('Institution details saved successfully');
         router.push('/sign-up');
       }
     } catch (error) {
       console.error('Error registering institution:', error);
       alert('An error occurred while registering the institution. Please try again.');
-    } finally {
-      setLoading(false); // Set loading to false
     }
-  };
+};
 
   const handleActivateInstitution = async () => {
     if (!contract) {
@@ -135,7 +134,6 @@ const InstitutionRegistration: React.FC = () => {
                 onChange={(e) => setInstitutionName(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
                 placeholder="Enter your institution's full name"
-                required
               />
             </div>
             <div>
@@ -149,7 +147,6 @@ const InstitutionRegistration: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
                 placeholder="Enter your institution's official email"
-                required
               />
             </div>
             <div>
@@ -163,7 +160,6 @@ const InstitutionRegistration: React.FC = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
                 placeholder="Enter your institution's phone number"
-                required
               />
             </div>
             <div>
@@ -177,7 +173,6 @@ const InstitutionRegistration: React.FC = () => {
                 onChange={(e) => setAddress(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
                 placeholder="Enter your institution's full address"
-                required
               ></textarea>
             </div>
             <div>
@@ -189,7 +184,6 @@ const InstitutionRegistration: React.FC = () => {
                 value={institutionType}
                 onChange={(e) => setInstitutionType(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800"
-                required
               >
                 <option value="">Select institution type</option>
                 <option value="primary">Primary School</option>
@@ -210,54 +204,41 @@ const InstitutionRegistration: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
                 placeholder="Create a secure password"
-                required
               />
             </div>
             <button
               type="submit"
-              className={`w-full bg-white text-yellow-800 font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={loading} // Disable button when loading
+              className="w-full bg-white text-yellow-800 font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 transition duration-300"
             >
-              {loading ? 'Registering...' : 'Register Institution'}
+              Register Institution
             </button>
           </form>
           <p className="mt-6 text-yellow-800 text-center">
             Already registered?{' '}
-            <Link href="/sign-up" className="text-yellow-600 font-semibold hover:underline">
-              Sign in
+            <Link href="/login" className="font-semibold underline">
+              Log in here
             </Link>
           </p>
         </div>
-
-        {/* Activation Section */}
-        <div className="bg-yellow-100 rounded-3xl p-8 shadow-lg md:w-1/3 ml-4">
-          <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Activate Your Institution</h2>
-          <p className="text-yellow-800 mb-6">If you have an Institution ID, activate it here.</p>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="institutionId" className="block text-yellow-800 font-semibold mb-2">
-                Institution ID
-              </label>
-              <input
-                type="text"
-                id="institutionId"
-                value={institutionIdToActivate}
-                onChange={(e) => setInstitutionIdToActivate(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-                placeholder="Enter Institution ID"
-              />
-            </div>
-            <button
-              onClick={handleActivateInstitution}
-              className="w-full bg-white text-yellow-800 font-bold py-3 px-4 rounded-lg hover:bg-yellow-50 transition duration-300"
-            >
-              Activate Institution
-            </button>
+        <div className="md:w-1/3 md:pl-8 flex flex-col items-center">
+          <img
+            src="/placeholder.svg?height=300&width=300"
+            alt="Happy students"
+            className="max-w-full h-auto mb-4"
+          />
+          <div className="bg-yellow-200 p-4 rounded-lg text-yellow-800 text-center">
+            <h3 className="font-bold text-lg mb-2">Why Join FunLearn?</h3>
+            <ul className="list-disc list-inside text-left">
+              <li>Interactive learning experiences</li>
+              <li>Customizable curriculum</li>
+              <li>Progress tracking tools</li>
+              <li>Engaging educational content</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default InstitutionRegistration;
