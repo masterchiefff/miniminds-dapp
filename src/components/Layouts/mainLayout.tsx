@@ -151,7 +151,7 @@ export default function MainLayout({ children, pageTitle, subTitle }: MainLayout
         <h1 className="text-2xl font-bold text-yellow-900 mb-8">Miniminds</h1>
         <nav>
           <ul className="space-y-4">
-            {userRole === 'learner' ? learnerMenu : instructorMenu}
+            {userRole === 'learner' ? instructorMenu : instructorMenu}
             <li>
               <a href="#" className="flex items-center text-yellow-800 hover:text-yellow-600">
                 <HelpCircle className="h-5 w-5 mr-3" />

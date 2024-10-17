@@ -3,13 +3,13 @@ import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDo7PIPX4JKgR-2NOIo7yuz6ldn8mPXi-I",
-  authDomain: "miniminds-af64e.firebaseapp.com",
-  projectId: "miniminds-af64e",
-  storageBucket: "miniminds-af64e.appspot.com",
-  messagingSenderId: "120287298408",
-  appId: "1:120287298408:web:a254f08d3ac4efa8a40cdd",
-  measurementId: "G-LYJ7MDVEL1"
+  apiKey: "AIzaSyBPX4LaukQ7OLedjFchl4LQkNOAijavlm4",
+  authDomain: "miniminds-a8f84.firebaseapp.com",
+  projectId: "miniminds-a8f84",
+  storageBucket: "miniminds-a8f84.appspot.com",
+  messagingSenderId: "555196454196",
+  appId: "1:555196454196:web:59dd2639e85d85486b0161",
+  measurementId: "G-2TWQN888EX"
 };
 
 const app = initializeApp(firebaseConfig);

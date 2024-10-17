@@ -2,6 +2,8 @@
 pragma solidity ^0.8.0;
 
 contract UserCourseManagement {
+    address public owner; // Add owner address
+
     struct Institution {
         string name;
         address owner; 
@@ -13,6 +15,7 @@ contract UserCourseManagement {
         bool isInstructor; 
         uint256 institutionId; 
         bool isRegistered; 
+        uint256 earnedFees; // Track fees earned by user
     }
 
     struct Course {
@@ -21,7 +24,8 @@ contract UserCourseManagement {
         address creator;
         uint256 mintingPrice; 
         bool isActive; 
-        uint256 institutionId; // Added institutionId to link course to institution
+        uint256 institutionId; // Link course to institution
+        uint256 totalMinted; // Track how many times the course has been minted
     }
 
     mapping(uint256 => Institution) public institutions; 
@@ -36,6 +40,18 @@ contract UserCourseManagement {
     event UserRegistered(address indexed walletAddress, bool isInstructor, uint256 institutionId);
     event CourseCreated(uint256 indexed courseId, string title, address indexed creator);
     event UserEnrolled(uint256 indexed courseId, address indexed user);
+    event CourseMinted(uint256 indexed courseId, address indexed user, uint256 amount);
+    event CourseUpdated(uint256 indexed courseId, string newTitle, string newDescription);
+    event CourseCompleted(uint256 indexed courseId, address indexed user, uint256 amount); 
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the contract owner");
+        _;
+    }
+
+    constructor() {
+        owner = msg.sender; // Set the owner to the account that deploys the contract
+    }
 
     function createInstitution(string memory _name) external {
         require(bytes(_name).length > 0, "Institution name is required");
@@ -55,6 +71,13 @@ contract UserCourseManagement {
         institutions[_institutionId].isActive = true;
     }
 
+    function updateInstitution(uint256 _institutionId, string memory _newName) external {
+        require(institutions[_institutionId].owner == msg.sender, "Only the owner can update the institution");
+        require(bytes(_newName).length > 0, "New institution name is required");
+        
+        institutions[_institutionId].name = _newName;
+    }
+
     function registerUser(uint256 _institutionId) external {
         require(!users[msg.sender].isRegistered, "User already registered");
 
@@ -66,7 +89,8 @@ contract UserCourseManagement {
             walletAddress: msg.sender,
             isInstructor: false,
             institutionId: _institutionId,
-            isRegistered: true
+            isRegistered: true,
+            earnedFees: 0 // Initialize earned fees
         });
 
         emit UserRegistered(msg.sender, false, _institutionId); 
@@ -83,7 +107,8 @@ contract UserCourseManagement {
             walletAddress: msg.sender,
             isInstructor: true,
             institutionId: _institutionId,
-            isRegistered: true
+            isRegistered: true,
+            earnedFees: 0 // Initialize earned fees
         });
 
         emit UserRegistered(msg.sender, true, _institutionId); 
@@ -104,7 +129,8 @@ contract UserCourseManagement {
             creator: msg.sender,
             mintingPrice: _mintingPrice,
             isActive: true,
-            institutionId: user.institutionId // Associate course with the user's institution
+            institutionId: user.institutionId,
+            totalMinted: 0 // Initialize total minted count
         });
 
         emit CourseCreated(courseCount, _title, msg.sender);
@@ -125,46 +151,103 @@ contract UserCourseManagement {
         emit UserEnrolled(_courseId, msg.sender);
     }
 
-    function getUserDetails(address _userAddress) external view returns (User memory) {
-        return users[_userAddress];
+    function mintCourse(uint256 _courseId) external payable {
+        Course storage course = courses[_courseId];
+        
+        require(course.isActive, "Course must be active");
+        require(msg.value == course.mintingPrice, "Incorrect minting price");
+
+        // Increment total minted count and update user's earned fees
+        course.totalMinted++;
+        
+        // Calculate earnings for the user (e.g., 10% of minting price)
+        uint256 earnings = (msg.value * 10) / 100;
+        
+        users[msg.sender].earnedFees += earnings;
+
+        emit CourseMinted(_courseId, msg.sender, msg.value);
     }
 
-    function getCourseDetails(uint256 _courseId) external view returns (Course memory) {
-        return courses[_courseId];
-    }
-    
-    // New Function to Get All Courses
-    function getAllCourses() external view returns (Course[] memory) {
-        Course[] memory allCourses = new Course[](courseCount);
-        
-        for (uint256 i = 0; i < courseCount; i++) {
-            allCourses[i] = courses[i];
-        }
-        
-        return allCourses;
-    }
-    
-    // New Function to Get Courses by Creator
-    function getCoursesByCreator(address _creator) external view returns (Course[] memory) {
-        uint256 count = 0;
+    function completeCourse(uint256 _courseId) external {
+        // Check if the user is enrolled in the specified course
+        require(courseEnrollments[_courseId][msg.sender], "User must be enrolled in the course");
 
-        for (uint256 i = 0; i < courseCount; i++) {
-            if (courses[i].creator == _creator) {
-                count++;
-            }
-        }
-        
-        Course[] memory creatorCourses = new Course[](count);
-        
-        uint256 index = 0;
-        
-        for (uint256 i = 0; i < courseCount; i++) {
-            if (courses[i].creator == _creator) {
-                creatorCourses[index] = courses[i];
-                index++;
-            }
-        }
-        
-        return creatorCourses;
+        // Optional: Logic to update any course completion state can go here
+
+        // Example: Calculate earnings for completion (if applicable)
+        uint256 earnings = users[msg.sender].earnedFees; // Fetch current earnings
+        require(earnings > 0, "No earnings to claim"); // Ensure the user has earnings to claim
+
+        users[msg.sender].earnedFees = 0; // Reset after claiming
+
+        payable(msg.sender).transfer(earnings); // Transfer earnings to the user
+
+        emit CourseCompleted(_courseId, msg.sender, earnings); // Optional: Emit an event for completion
     }
+
+     function updateCourse(uint256 _courseId, string memory _newTitle, string memory _newDescription) external {
+         Course storage course = courses[_courseId];
+         require(course.creator == msg.sender || users[msg.sender].isInstructor == true , "Only the creator or an instructor can update the course");
+         
+         if (bytes(_newTitle).length > 0) {
+             course.title = _newTitle;
+         }
+         
+         if (bytes(_newDescription).length > 0) {
+             course.description = _newDescription;
+         }
+         
+         emit CourseUpdated(_courseId, _newTitle, _newDescription);
+     }
+
+     function withdraw() external {
+         User storage user = users[msg.sender];
+         require(user.earnedFees > 0, "No funds to withdraw");
+
+         uint256 amount = user.earnedFees;
+         user.earnedFees = 0; // Reset after withdrawal
+         
+         payable(msg.sender).transfer(amount); // Transfer earnings to user
+     }
+
+     function getUserDetails(address _userAddress) external view returns (User memory) {
+         return users[_userAddress];
+     }
+
+     function getCourseDetails(uint256 _courseId) external view returns (Course memory) {
+         return courses[_courseId];
+     }
+    
+     function getAllCourses() external view returns (Course[] memory) {
+         Course[] memory allCourses = new Course[](courseCount);
+        
+         for (uint256 i = 0; i < courseCount; i++) {
+             allCourses[i] = courses[i];
+         }
+        
+         return allCourses;
+     }
+    
+     function getCoursesByCreator(address _creator) external view returns (Course[] memory) {
+         uint256 count = 0;
+
+         for (uint256 i = 0; i < courseCount; i++) {
+             if (courses[i].creator == _creator) {
+                 count++;
+             }
+         }
+        
+         Course[] memory creatorCourses = new Course[](count);
+        
+         uint256 index = 0;
+        
+         for (uint256 i = 0; i < courseCount; i++) {
+             if (courses[i].creator == _creator) {
+                 creatorCourses[index] = courses[i];
+                 index++;
+             }
+         }
+        
+         return creatorCourses;
+     }
 }

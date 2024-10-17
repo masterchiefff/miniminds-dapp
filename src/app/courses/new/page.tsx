@@ -109,14 +109,14 @@ const CreateCourse = () => {
             await courseContract.methods.activateInstitution(institutionId.toString()).send({ from: account, gas: gasEstimate.toString() });
 
             alert('Institution activated successfully!');
-        } catch (error: any) {
+        } catch (error: any) {                                                                                                      
             console.error('Error activating institution:', error);
             setErrorMessage('An error occurred while activating the institution. Please try again.');
         }
     };
 
     return (
-        <MainLayout pageTitle={'Create a new Course'} subTitle={'New Course'}>
+        <MainLayout pageTitle={'Create a new Course'} subTitle={'New Course'}>                                      
             <div>
                 <h1>Create Course</h1>
                 <input

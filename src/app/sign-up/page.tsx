@@ -22,8 +22,10 @@ import {
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
 import Link from 'next/link';
+import { db } from '@/lib/firebase'; // Import your Firebase configuration
+import { collection, addDoc } from 'firebase/firestore'; // Import Firestore methods
 
-const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
+const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
 
 interface Institution {
   id: number;
@@ -36,6 +38,8 @@ export default function UserRegistration() {
   const [selectedInstitution, setSelectedInstitution] = useState<string>('');
   const [role, setRole] = useState<'learner' | 'instructor'>('learner'); 
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const [name, setName] = useState<string>(''); // State for name
+  const [email, setEmail] = useState<string>(''); // State for email
   const router = useRouter();
 
   useEffect(() => {
@@ -111,6 +115,14 @@ export default function UserRegistration() {
       // Send transaction
       await method.send({ from: walletAddress, gas: gasEstimate });
 
+      // Store the name in Firestore
+      await addDoc(collection(db, 'users'), {
+        walletAddress: walletAddress,
+        name: name,
+        email: email,
+        institution: selectedInstitution,
+      });
+
       alert('User registered successfully!');
       setIsRegistered(true);
 
@@ -170,20 +182,36 @@ export default function UserRegistration() {
               </WalletDropdown>
             </Wallet>
           </div>
-
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div>
-              <label htmlFor="institution" className="block text-yellow-800 font-semibold mb-2">
-                Select Institution
-              </label>
-              <select
-                id="institution"
-                value={selectedInstitution}
-                onChange={(e) => setSelectedInstitution(e.target.value)}
+        
+          <form onSubmit={handleRegister} className="flex flex-col items-center">
+            <div className='mb-2 w-full'>
+              <input 
+                type="text" 
+                placeholder="Name" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
                 required
+              />
+            </div>
+            <div className='mb-2 w-full'>
+              <input 
+                type="email" 
+                placeholder="Email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
+                required
+              />
+            </div>
+            <div className='mb-2 w-full'>
+              <select 
+                value={selectedInstitution} 
+                onChange={(e) => setSelectedInstitution(e.target.value)} 
+                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800"
+                required
               >
-                <option value="">Select an institution</option>
+                <option value="">Select Institution</option>
                 {institutions.map((institution) => (
                   <option key={institution.id} value={institution.id}>
                     {institution.name}
@@ -192,41 +220,23 @@ export default function UserRegistration() {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="role" className="block text-yellow-800 font-semibold mb-2">
-                Select Role
-              </label>
-              <select
-                id="role"
-                value={role}
-                onChange={(e) => {
-                  setRole(e.target.value as 'learner' | 'instructor'); 
-                  console.log('Role selected:', e.target.value); 
-                }}
-                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
+            <div className='mb-2 w-full'>
+              <select 
+                value={role} 
+                onChange={(e) => setRole(e.target.value as 'learner' | 'instructor')} 
+                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800"
+                required
               >
                 <option value="learner">Learner</option>
                 <option value="instructor">Instructor</option>
               </select>
             </div>
-
-            <button
-              type="submit"
-              className="w-full bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center"
-            >
-              Register <ArrowRight className="ml-2 h-5 w-5" />
+            <button type="submit" className="bg-blue-600 text-white font-bold py-3 px-4 rounded-lg w-full">
+              Register
             </button>
           </form>
         </>
       )}
-
-      {isRegistered && <p className="text-green-600 mt-4 text-center">Registration Successful!</p>}
-      <p className="mt-6 text-yellow-800 text-center">
-        Already have an account?{' '}
-        <Link href="/" className="font-semibold underline">
-          Log in here
-        </Link>
-      </p>
     </SessionLayout>
   );
 }
