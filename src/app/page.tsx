@@ -34,7 +34,7 @@ export default function Login() {
     account: null,
   });
   const router = useRouter();
-  const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
+  const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
   const [contract, setContract] = useState<any>(null); 
 
   const connectWallet = async () => {
@@ -42,14 +42,18 @@ export default function Login() {
       try {
         const web3 = new Web3(window.ethereum);
         await window.ethereum.request({ method: 'eth_requestAccounts' });
-
+  
         const accounts = await web3.eth.getAccounts();
         if (accounts.length > 0) {
           setState({ isConnected: true, account: accounts[0] });
-
+  
+          // Initialize contract here after wallet connection
           const userContract = new web3.eth.Contract(userRegistrationABI, contractAddress);
+          if (!web3.utils.isAddress(contractAddress)) {
+            throw new Error("Invalid contract address.");
+          }
           setContract(userContract);
-
+  
           await handleLogin(accounts[0], userContract); 
         }
       } catch (error) {
@@ -59,21 +63,23 @@ export default function Login() {
       alert('Please install MetaMask to use this feature.');
     }
   };
-
+  
   const handleLogin = async (walletAddress: string, userContract: any) => {
     if (!userContract) {
       console.error("Contract is not initialized.");
       return;
     }
-
+  
     try {
-      const userRole = await userContract.methods.getUserDetails(walletAddress).call(); 
-      console.log(userRole)
-
-      if (userRole.isInstructor) {
-        router.push('/dashboard/'); 
-      } else if (!userRole.isInstructor) {
-        router.push('/dashboard/learner');
+      // Fetch user details
+      const userRole = await userContract.methods.getUserDetails(walletAddress).call();   
+      // Ensure that the structure of userRole matches what you expect
+      if (userRole && userRole.isInstructor !== undefined) {
+        if (userRole.isInstructor) {
+          router.push('/dashboard/'); 
+        } else {
+          router.push('/dashboard/learner');
+        }
       } else {
         console.log("User role is not recognized.");
       }
@@ -81,9 +87,14 @@ export default function Login() {
       console.error("Error fetching user role:", error);
     }
   };
+  
 
   return (
-    <SessionLayout title={'Login to Miniminds'} subtitle={'Connect your wallet to log in'} title1={'Minimind is all about fun'} image={'https://i.postimg.cc/t4K1pJrb/boy-jumping-air-with-backpack-his-back-608506-11629-1-1-removebg-preview.png'}>
+    <SessionLayout 
+      title={'Login to Miniminds'} 
+      subtitle={'Connect your wallet to log in'} 
+      title1={'Minimind is all about fun'} 
+      image={'https://i.postimg.cc/t4K1pJrb/boy-jumping-air-with-backpack-his-back-608506-11629-1-1-removebg-preview.png'}>
       {!state.isConnected ? (
         <button
           onClick={connectWallet}

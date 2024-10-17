@@ -1,25 +1,88 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Web3 from 'web3'; // Import Web3
 import { useAuth } from '@/hooks/authentication';
 import { useRouter } from 'next/navigation';
 import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
 import MainLayout from '@/components/Layouts/mainLayout';
+import { db } from '@/lib/firebase'; // Ensure you have Firebase configured
+import { collection, query, where, getDocs } from 'firebase/firestore'; // Import Firestore methods
+import userRegistrationABI from '@/contracts/UserRegistrationABI.json'
+
+const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
+
+function capitalizeWords(str: string) {
+  return str.split(' ') 
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+            .join(' '); 
+}
 
 const Dashboard: React.FC = () => {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [tokenBalance, setTokenBalance] = useState<number>(0);
+  const [userName, setUserName] = useState<string>('');
+  const [walletAddress, setWalletAddress] = useState<string>('');
+  
+  const { isRegistered, loading } = useAuth();
+  const router = useRouter();
 
-  // const { isRegistered, loading } = useAuth();
-  // const router = useRouter();
+  useEffect(() => {
+    const fetchUserName = async () => {
+      if (walletAddress) {
+        try {
+          const usersRef = collection(db, 'users'); // Reference to the 'users' collection
+          const q = query(usersRef, where('walletAddress', '==', walletAddress)); // Query to match the walletAddress
+          const querySnapshot = await getDocs(q); // Execute the query
 
-  // if (!isRegistered) {
-  //   router.push('/'); 
-  //   return null; 
-  // }
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach((doc) => {
+              const userData = doc.data();
+              setUserName(userData.name); // Assuming the name field is named 'name'
+            });
+          } else {
+            console.error("No such document!");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUserName();
+  }, [walletAddress]);
+
+
+  // Function to fetch user's wallet address from the smart contract
+  const fetchWalletAddress = async () => {
+    if (window.ethereum) {
+      const web3 = new Web3(window.ethereum);
+      const contract = new web3.eth.Contract(userRegistrationABI, contractAddress);
+
+      try {
+        const accounts = await web3.eth.getAccounts();
+        const address = accounts[0]; // Get the first account (wallet address)
+
+        // Optionally, if your contract has a function to get wallet address:
+        // const address = await contract.methods.getUserWalletAddress().call();
+
+        setWalletAddress(address);
+      } catch (error) {
+        console.error('Error fetching wallet address:', error);
+      }
+    } else {
+      console.error('Ethereum provider not found. Make sure you have MetaMask installed.');
+    }
+  };
+
+  useEffect(() => {
+    fetchWalletAddress(); // Fetch wallet address when the user is registered
+    // if (isRegistered) {
+    // } else {
+    //   router.push('/'); // Redirect to login if not registered
+    // }
+  }, [isRegistered, router]);
 
   return (
-    <MainLayout pageTitle={'Dashboard'} subTitle={'summary of your activities'}>
+    <MainLayout pageTitle={`Welcome back, ${capitalizeWords(userName)}`} subTitle={`Your Wallet address is; ${walletAddress}`}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-yellow-800 mb-4 flex items-center">

@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import contractABI from '@/contracts/UserRegistrationABI.json'; 
-import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SessionLayout from '@/components/Layouts/sessionLayout';
 import {
@@ -13,17 +12,9 @@ import {
   Identity,
   EthBalance,
 } from '@coinbase/onchainkit/identity';
-import { color } from '@coinbase/onchainkit/theme';
-import {
-  ConnectWallet,
-  Wallet,
-  WalletDropdown,
-  WalletDropdownBasename, 
-  WalletDropdownDisconnect,
-} from '@coinbase/onchainkit/wallet';
-import Link from 'next/link';
+import { ConnectWallet, Wallet, WalletDropdown, WalletDropdownBasename, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
 import { db } from '@/lib/firebase'; // Import your Firebase configuration
-import { collection, addDoc } from 'firebase/firestore'; // Import Firestore methods
+import { collection, addDoc, doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
 
 const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
 
@@ -37,7 +28,6 @@ export default function UserRegistration() {
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<string>('');
   const [role, setRole] = useState<'learner' | 'instructor'>('learner'); 
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [name, setName] = useState<string>(''); // State for name
   const [email, setEmail] = useState<string>(''); // State for email
   const router = useRouter();
@@ -46,6 +36,28 @@ export default function UserRegistration() {
     loadWeb3();
     fetchInstitutions();
   }, []);
+
+  useEffect(() => {
+    // Check if the user is already registered when the wallet address changes
+    const checkUserRegistration = async () => {
+      if (walletAddress) {
+        const userDocRef = doc(db, 'users', walletAddress);
+        const userDoc = await getDoc(userDocRef);
+        
+        if (userDoc.exists()) {
+          // Redirect to the appropriate dashboard based on the role
+          const userData = userDoc.data();
+          if (userData.role === 'instructor') {
+            router.push('/dashboard');
+          } else {
+            router.push('/dashboard/learner');
+          }
+        }
+      }
+    };
+
+    checkUserRegistration();
+  }, [walletAddress, router]);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -121,11 +133,12 @@ export default function UserRegistration() {
         name: name,
         email: email,
         institution: selectedInstitution,
+        role: role, // Store the role
       });
 
       alert('User registered successfully!');
-      setIsRegistered(true);
 
+      // Redirect based on role
       if (role === 'instructor') {
         router.push('/dashboard');
       } else {
@@ -152,7 +165,12 @@ export default function UserRegistration() {
   }
 
   return (
-    <SessionLayout title={'Register to miniminds'} subtitle={'Please connect your MetaMask wallet.'} title1={'join the fun'} image={'https://i.postimg.cc/t4K1pJrb/boy-jumping-air-with-backpack-his-back-608506-11629-1-1-removebg-preview.png'}>
+    <SessionLayout 
+      title={'Register to miniminds'} 
+      subtitle={'Please connect your MetaMask wallet.'} 
+      title1={'join the fun'} 
+      image={'https://i.postimg.cc/t4K1pJrb/boy-jumping-air-with-backpack-his-back-608506-11629-1-1-removebg-preview.png'}
+    >
       {!walletAddress ? (
         <div className="text-center">
           <button
@@ -166,7 +184,7 @@ export default function UserRegistration() {
         <>
           <div className="flex justify-start mb-4">
             <Wallet className='w-full'>
-              <ConnectWallet  className='w-full'>
+              <ConnectWallet className='w-full'>
                 <Avatar className="h-6 w-6" />
                 <Name className='w-full'/>
               </ConnectWallet>
@@ -174,7 +192,7 @@ export default function UserRegistration() {
                 <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
                   <Avatar />
                   <Name />
-                  <Address className={color.foregroundMuted} />
+                  <Address />
                   <EthBalance />
                 </Identity>
                 <WalletDropdownBasename />

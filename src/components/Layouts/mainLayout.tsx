@@ -36,84 +36,7 @@ interface MainLayoutProps {
 export default function MainLayout({ children, pageTitle, subTitle }: MainLayoutProps) {
   const [isConnected, setIsConnected] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const [userRole, setUserRole] = useState<'learner' | 'instructor'>('learner'); // Default to learner
   const router = useRouter();
-
-  // Function to fetch user role from contract/ABI
-  async function fetchUserRoleFromContract(): Promise<boolean> { // Adjust return type as needed
-    if (typeof window.ethereum !== 'undefined') {
-      const web3 = new Web3(window.ethereum);
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-      const contractABI = ABI;
-      const contractAddress = "0xb20BB20AE407E337DFA8541eFF530625dc8aD69f";
-      const contract = new web3.eth.Contract(contractABI, contractAddress);
-
-      const accounts = await web3.eth.getAccounts();
-      const userAddress = accounts[0];
-
-      try {
-        // Call a method from the contract to get the user role
-        const role: UserDetails = await contract.methods.getUserDetails(userAddress).call();
-        console.log(role);
-        return role.isInstructor; // Returns true if instructor, false if learner
-      } catch (error) {
-        console.error('Error fetching user role:', error);
-        return false; // Default to 'learner' in case of error
-      }
-    }
-    return false; // Return false if no Ethereum provider is found
-  }
-
-  useEffect(() => {
-    // Fetch the user role after MetaMask connection
-    async function fetchUserRole() {
-      const role = await fetchUserRoleFromContract();
-      setUserRole(role ? 'instructor' : 'learner'); // Adjust based on your logic
-    }
-    fetchUserRole();
-  }, []);
-
-  const learnerMenu = (
-    <>
-      <li>
-        <a href="#" className="flex items-center text-yellow-800 hover:text-yellow-600">
-          <Home className="h-5 w-5 mr-3" />
-          Dashboard
-        </a>
-      </li>
-      <li>
-        <a href="#" className="flex items-center text-yellow-800 hover:text-yellow-600">
-          <Book className="h-5 w-5 mr-3" />
-          Courses
-        </a>
-      </li>
-      <li>
-        <a href="#" className="flex items-center text-yellow-800 hover:text-yellow-600">
-          <Bookmark className="h-5 w-5 mr-3" />
-          Saved
-        </a>
-      </li>
-      <li>
-        <a href="/courses/enrolled-courses" className="flex items-center text-yellow-800 hover:text-yellow-600">
-          <Book className="h-5 w-5 mr-3" />
-          Enrolled
-        </a>
-      </li>
-      <li>
-        <a href="#" className="flex items-center text-yellow-800 hover:text-yellow-600">
-          <Trophy className="h-5 w-5 mr-3" />
-          Achievements
-        </a>
-      </li>
-      <li>
-        <a href="#" className="flex items-center text-yellow-800 hover:text-yellow-600">
-          <Settings className="h-5 w-5 mr-3" />
-          Settings
-        </a>
-      </li>
-    </>
-  );
 
   const instructorMenu = (
     <>
@@ -151,7 +74,7 @@ export default function MainLayout({ children, pageTitle, subTitle }: MainLayout
         <h1 className="text-2xl font-bold text-yellow-900 mb-8">Miniminds</h1>
         <nav>
           <ul className="space-y-4">
-            {userRole === 'learner' ? instructorMenu : instructorMenu}
+            {instructorMenu}
             <li>
               <a href="#" className="flex items-center text-yellow-800 hover:text-yellow-600">
                 <HelpCircle className="h-5 w-5 mr-3" />
