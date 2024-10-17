@@ -8,8 +8,8 @@ import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import bcrypt from 'bcryptjs';
-
-
+//import { addUserData } from '/firestore'; 
+import {}
 
 interface Institution {
   name: string;
@@ -37,57 +37,66 @@ const InstitutionRegistration: React.FC = () => {
     }
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  
 
-    if (!contract) {
-      alert('Contract is not available. Please try again later.');
-      return;
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  if (!contract) {
+    alert('Contract is not available. Please try again later.');
+    return;
+  }
+
+  try {
+    // Get the institution count from the smart contract
+    const institutionCount: string = await contract.methods.institutionCount().call();
+    let institutionExists = false;
+
+    // Check if the institution already exists by comparing names
+    for (let i = 0; i < parseInt(institutionCount); i++) {
+      const institution: Institution = await contract.methods.institutions(i).call();
+      if (institution.name === institutionName) {
+        institutionExists = true;
+        break;
+      }
     }
 
-    try {
-      const institutionCount: string = await contract.methods.institutionCount().call();
-      let institutionExists = false;
+    if (institutionExists) {
+      alert('An institution with this name already exists. Please choose a different name.');
+    } else {
+      // Request the user's wallet to connect via MetaMask
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const creator = accounts[0];
 
-      for (let i = 0; i < parseInt(institutionCount); i++) {
-        const institution: Institution = await contract.methods.institutions(i).call();
-        if (institution.name === institutionName) {
-          institutionExists = true;
-          break;
-        }
-      }
+      // Call the smart contract method to create the institution
+      await contract.methods.createInstitution(institutionName).send({ from: creator });
+      alert('Institution registered successfully!');
 
-      if (institutionExists) {
-        alert('An institution with this name already exists. Please choose a different name.');
-      } else {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const creator = accounts[0];
+      // Hash the password before saving
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-        await contract.methods.createInstitution(institutionName).send({ from: creator });
-        alert('Institution registered successfully!');
+      // Save institution details in Firebase using addUserData
+      const institutionData = {
+        name: institutionName,
+        email: email,
+        phone: phone,
+        address: address,
+        institutionType: institutionType,
+        password: hashedPassword,  // Store the hashed password
+        createdAt: new Date(),      // Store the current date
+      };
 
-        // Hash the password before saving
-        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+      await addUserData(institutionData); // Call the function to save institution data in Firestore
 
-        // Save institution details in Firebase
-        await addDoc(collection(db, 'institutions'), {
-          name: institutionName,
-          email: email,
-          phone: phone,
-          address: address,
-          institutionType: institutionType,
-          password: hashedPassword, // Store the hashed password
-          createdAt: new Date(),
-        });
-
-        alert('Institution details saved successfully');
-        router.push('/sign-up');
-      }
-    } catch (error) {
-      console.error('Error registering institution:', error);
-      alert('An error occurred while registering the institution. Please try again.');
+      alert('Institution details saved successfully');
+      router.push('/sign-up');
     }
+  } catch (error) {
+    console.error('Error registering institution:', error);
+    alert('An error occurred while registering the institution. Please try again.');
+  }
 };
+
 
   const handleActivateInstitution = async () => {
     if (!contract) {

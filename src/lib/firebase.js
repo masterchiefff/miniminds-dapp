@@ -1,19 +1,27 @@
+
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+
 import { getFirestore } from "firebase/firestore";
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDo7PIPX4JKgR-2NOIo7yuz6ldn8mPXi-I",
-  authDomain: "miniminds-af64e.firebaseapp.com",
-  projectId: "miniminds-af64e",
-  storageBucket: "miniminds-af64e.appspot.com",
-  messagingSenderId: "120287298408",
-  appId: "1:120287298408:web:a254f08d3ac4efa8a40cdd",
-  measurementId: "G-LYJ7MDVEL1"
+  apiKey: "AIzaSyDRpCBJ0QxarQTxxat4misSZwjMbJhe6sE",
+  authDomain: "miniminds-27f4d.firebaseapp.com",
+  projectId: "miniminds-27f4d",
+  storageBucket: "miniminds-27f4d.appspot.com",
+  messagingSenderId: "3085120495",
+  appId: "1:3085120495:web:cacf8f657086300bdebc1a"
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Initialize Firestore
 const db = getFirestore(app);
 
-export { analytics, db };
+
+
+// Export the app and db for use in other parts of your application
+export { app, db };
+
+
