@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import contractABI from '@/contracts/UserRegistrationABI.json'; 
+import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SessionLayout from '@/components/Layouts/sessionLayout';
 import {
@@ -12,11 +13,17 @@ import {
   Identity,
   EthBalance,
 } from '@coinbase/onchainkit/identity';
-import { ConnectWallet, Wallet, WalletDropdown, WalletDropdownBasename, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
-import { db } from '@/lib/firebase'; // Import your Firebase configuration
-import { collection, addDoc, doc, getDoc } from 'firebase/firestore'; // Import Firestore methods
+import { color } from '@coinbase/onchainkit/theme';
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownBasename, 
+  WalletDropdownDisconnect,
+} from '@coinbase/onchainkit/wallet';
+import Link from 'next/link';
 
-const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
+const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
 
 interface Institution {
   id: number;
@@ -28,36 +35,13 @@ export default function UserRegistration() {
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<string>('');
   const [role, setRole] = useState<'learner' | 'instructor'>('learner'); 
-  const [name, setName] = useState<string>(''); // State for name
-  const [email, setEmail] = useState<string>(''); // State for email
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
     loadWeb3();
     fetchInstitutions();
   }, []);
-
-  useEffect(() => {
-    // Check if the user is already registered when the wallet address changes
-    const checkUserRegistration = async () => {
-      if (walletAddress) {
-        const userDocRef = doc(db, 'users', walletAddress);
-        const userDoc = await getDoc(userDocRef);
-        
-        if (userDoc.exists()) {
-          // Redirect to the appropriate dashboard based on the role
-          const userData = userDoc.data();
-          if (userData.role === 'instructor') {
-            router.push('/dashboard');
-          } else {
-            router.push('/dashboard/learner');
-          }
-        }
-      }
-    };
-
-    checkUserRegistration();
-  }, [walletAddress, router]);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -127,18 +111,9 @@ export default function UserRegistration() {
       // Send transaction
       await method.send({ from: walletAddress, gas: gasEstimate });
 
-      // Store the name in Firestore
-      await addDoc(collection(db, 'users'), {
-        walletAddress: walletAddress,
-        name: name,
-        email: email,
-        institution: selectedInstitution,
-        role: role, // Store the role
-      });
-
       alert('User registered successfully!');
+      setIsRegistered(true);
 
-      // Redirect based on role
       if (role === 'instructor') {
         router.push('/dashboard');
       } else {
@@ -165,12 +140,7 @@ export default function UserRegistration() {
   }
 
   return (
-    <SessionLayout 
-      title={'Register to miniminds'} 
-      subtitle={'Please connect your MetaMask wallet.'} 
-      title1={'join the fun'} 
-      image={'https://i.postimg.cc/t4K1pJrb/boy-jumping-air-with-backpack-his-back-608506-11629-1-1-removebg-preview.png'}
-    >
+    <SessionLayout title={'Register to miniminds'} subtitle={'Please connect your MetaMask wallet.'} title1={'join the fun'} image={'https://i.postimg.cc/t4K1pJrb/boy-jumping-air-with-backpack-his-back-608506-11629-1-1-removebg-preview.png'}>
       {!walletAddress ? (
         <div className="text-center">
           <button
@@ -184,7 +154,7 @@ export default function UserRegistration() {
         <>
           <div className="flex justify-start mb-4">
             <Wallet className='w-full'>
-              <ConnectWallet className='w-full'>
+              <ConnectWallet  className='w-full'>
                 <Avatar className="h-6 w-6" />
                 <Name className='w-full'/>
               </ConnectWallet>
@@ -192,7 +162,7 @@ export default function UserRegistration() {
                 <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
                   <Avatar />
                   <Name />
-                  <Address />
+                  <Address className={color.foregroundMuted} />
                   <EthBalance />
                 </Identity>
                 <WalletDropdownBasename />
@@ -200,36 +170,20 @@ export default function UserRegistration() {
               </WalletDropdown>
             </Wallet>
           </div>
-        
-          <form onSubmit={handleRegister} className="flex flex-col items-center">
-            <div className='mb-2 w-full'>
-              <input 
-                type="text" 
-                placeholder="Name" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
+
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div>
+              <label htmlFor="institution" className="block text-yellow-800 font-semibold mb-2">
+                Select Institution
+              </label>
+              <select
+                id="institution"
+                value={selectedInstitution}
+                onChange={(e) => setSelectedInstitution(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-                required
-              />
-            </div>
-            <div className='mb-2 w-full'>
-              <input 
-                type="email" 
-                placeholder="Email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
-                required
-              />
-            </div>
-            <div className='mb-2 w-full'>
-              <select 
-                value={selectedInstitution} 
-                onChange={(e) => setSelectedInstitution(e.target.value)} 
-                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800"
                 required
               >
-                <option value="">Select Institution</option>
+                <option value="">Select an institution</option>
                 {institutions.map((institution) => (
                   <option key={institution.id} value={institution.id}>
                     {institution.name}
@@ -238,23 +192,41 @@ export default function UserRegistration() {
               </select>
             </div>
 
-            <div className='mb-2 w-full'>
-              <select 
-                value={role} 
-                onChange={(e) => setRole(e.target.value as 'learner' | 'instructor')} 
-                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800"
-                required
+            <div>
+              <label htmlFor="role" className="block text-yellow-800 font-semibold mb-2">
+                Select Role
+              </label>
+              <select
+                id="role"
+                value={role}
+                onChange={(e) => {
+                  setRole(e.target.value as 'learner' | 'instructor'); 
+                  console.log('Role selected:', e.target.value); 
+                }}
+                className="w-full px-3 py-2 rounded-lg bg-yellow-200 text-yellow-800 placeholder-yellow-600"
               >
                 <option value="learner">Learner</option>
                 <option value="instructor">Instructor</option>
               </select>
             </div>
-            <button type="submit" className="bg-blue-600 text-white font-bold py-3 px-4 rounded-lg w-full">
-              Register
+
+            <button
+              type="submit"
+              className="w-full bg-yellow-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center"
+            >
+              Register <ArrowRight className="ml-2 h-5 w-5" />
             </button>
           </form>
         </>
       )}
+
+      {isRegistered && <p className="text-green-600 mt-4 text-center">Registration Successful!</p>}
+      <p className="mt-6 text-yellow-800 text-center">
+        Already have an account?{' '}
+        <Link href="/" className="font-semibold underline">
+          Log in here
+        </Link>
+      </p>
     </SessionLayout>
   );
 }

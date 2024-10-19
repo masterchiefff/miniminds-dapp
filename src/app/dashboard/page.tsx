@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3'; // Import Web3
-import { useAuth } from '@/hooks/authentication';
+// import { useAuth } from '@/hooks/authentication';
 import { useRouter } from 'next/navigation';
 import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
 import MainLayout from '@/components/Layouts/mainLayout';
@@ -10,7 +10,7 @@ import { db } from '@/lib/firebase'; // Ensure you have Firebase configured
 import { collection, query, where, getDocs } from 'firebase/firestore'; // Import Firestore methods
 import userRegistrationABI from '@/contracts/UserRegistrationABI.json'
 
-const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
+const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
 
 function capitalizeWords(str: string) {
   return str.split(' ') 
@@ -22,8 +22,8 @@ const Dashboard: React.FC = () => {
   const [userName, setUserName] = useState<string>('');
   const [walletAddress, setWalletAddress] = useState<string>('');
   
-  const { isRegistered, loading } = useAuth();
-  const router = useRouter();
+  // const { isRegistered, loading } = useAuth();
+  // const router = useRouter();
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -73,13 +73,13 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchWalletAddress(); // Fetch wallet address when the user is registered
-    // if (isRegistered) {
-    // } else {
-    //   router.push('/'); // Redirect to login if not registered
-    // }
-  }, [isRegistered, router]);
+  // useEffect(() => {
+  //   fetchWalletAddress(); // Fetch wallet address when the user is registered
+  //   // if (isRegistered) {
+  //   // } else {
+  //   //   router.push('/'); // Redirect to login if not registered
+  //   // }
+  // }, [isRegistered, router]);
 
   return (
     <MainLayout pageTitle={`Welcome back, ${capitalizeWords(userName)}`} subTitle={`Your Wallet address is; ${walletAddress}`}>

@@ -5,8 +5,9 @@ import Web3 from 'web3';
 import { Star } from 'lucide-react';
 import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import MainLayout from '@/components/Layouts/mainLayout';
+import CourseSkeleton from '@/components/shared-componets/skeleton';
 
-const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e'; 
+const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB'; 
 
 interface Course {
   id: number;
@@ -33,6 +34,7 @@ export default function CoursesPage(): JSX.Element {
   const [walletAddress, setWalletAddress] = useState<string>('');
   const [enrollmentStatus, setEnrollmentStatus] = useState<string>('');
   const [courseEnrollments, setCourseEnrollments] = useState<Record<number, boolean>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchUserDetails = async () => {
     if (window.ethereum) {
@@ -61,6 +63,7 @@ export default function CoursesPage(): JSX.Element {
 
   const fetchCourses = async () => {
     if (contract && userInstitutionId !== null) {
+      setIsLoading(true); // Start loading state
       try {
         const allCourses = await contract.methods.getAllCourses().call();
         const filteredCourses = allCourses.filter((course: any) => course.institutionId === userInstitutionId);
@@ -80,29 +83,11 @@ export default function CoursesPage(): JSX.Element {
         setCourses(formattedCourses);
       } catch (error) {
         console.error('Error fetching courses:', error);
+      } finally {
+        setIsLoading(false); // End loading state
       }
     }
   };
-
-  // const enrollInCourse = async (courseId: number) => {
-  //   if (contract && walletAddress) {
-  //     try {
-  //       setEnrollmentStatus('Enrolling...');
-  //       const tx = await contract.methods.enrollInCourse(courseId).send({ from: walletAddress });
-  //       await tx;
-  
-  //       setEnrollmentStatus('Successfully enrolled in the course!');
-  //       alert('You have successfully enrolled in the course!');
-  
-  //       setCourseEnrollments(prevState => ({ ...prevState, [courseId]: true }));
-  
-  //     } catch (error) {
-  //       console.error('Error enrolling in course:', error);
-  //       setEnrollmentStatus('Failed to enroll in the course.');
-  //       alert('Failed to enroll in the course. Please try again.');
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     fetchUserDetails();
@@ -115,7 +100,12 @@ export default function CoursesPage(): JSX.Element {
   return (
     <MainLayout pageTitle={'Courses'} subTitle={'A List of all your institution\'s courses'}>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.length > 0 ? (
+        {isLoading ? (
+          // Show skeletons while loading
+          Array.from({ length: 3 }).map((_, index) => (
+            <CourseSkeleton key={index} />
+          ))
+        ) : courses.length > 0 ? (
           courses.map((course) => (
             <div key={course.id} className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="p-6">

@@ -6,7 +6,7 @@ import { Bell, Book, Brain, Coins, Palette, PenTool, Rocket, Star, Wallet } from
 
 import userRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import { Web3 } from 'web3';
-const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
+const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
 
 interface DashState {
     isConnected: boolean;

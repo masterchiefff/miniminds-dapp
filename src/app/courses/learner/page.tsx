@@ -18,7 +18,7 @@ interface Course {
 
 export default function LearnerCourses() {
     const [courses, setCourses] = useState<Course[]>([]);
-    const contractAddress: string = "0x949474c73770874D0E725772c6f0de4CF234913e"; 
+    const contractAddress: string = "0x22790A4E84Ba310939A659969aAF22635fc9CEcB"; 
     const [web3, setWeb3] = useState<Web3 | null>(null);
     const [contract, setContract] = useState<any>(null); 
 
