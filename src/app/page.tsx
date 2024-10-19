@@ -46,8 +46,6 @@ export default function Login() {
         const accounts = await web3.eth.getAccounts();
         if (accounts.length > 0) {
           setState({ isConnected: true, account: accounts[0] });
-  
-          // Initialize contract here after wallet connection
           const userContract = new web3.eth.Contract(userRegistrationABI, contractAddress);
           if (!web3.utils.isAddress(contractAddress)) {
             throw new Error("Invalid contract address.");
@@ -71,9 +69,7 @@ export default function Login() {
     }
   
     try {
-      // Fetch user details
       const userRole = await userContract.methods.getUserDetails(walletAddress).call();   
-      // Ensure that the structure of userRole matches what you expect
       if (userRole && userRole.isInstructor !== undefined) {
         if (userRole.isInstructor) {
           router.push('/dashboard/'); 

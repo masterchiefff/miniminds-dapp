@@ -18,7 +18,7 @@ interface Course {
 
 export default function LearnerCourses() {
     const [courses, setCourses] = useState<Course[]>([]);
-    const contractAddress: string = "0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4"; 
+    const contractAddress: string = "0x949474c73770874D0E725772c6f0de4CF234913e"; 
     const [web3, setWeb3] = useState<Web3 | null>(null);
     const [contract, setContract] = useState<any>(null); 
 
@@ -110,7 +110,7 @@ export default function LearnerCourses() {
                     ) : (
                         courses.map((course, index) => (
                             <Link key={index} href={`/courses/learner/course-details/${course.id}`} passHref>
-                                <div className="bg-white rounded-xl p-6 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                                <div className="bg-white rounded-xl p-6 flex items-center mb-4 gap-4 hover:shadow-md transition-shadow cursor-pointer">
                                     <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                                         <Book className="text-blue-500 w-8 h-8" />
                                     </div>

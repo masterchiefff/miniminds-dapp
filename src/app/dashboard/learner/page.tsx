@@ -6,7 +6,7 @@ import { Bell, Book, Brain, Coins, Palette, PenTool, Rocket, Star, Wallet } from
 
 import userRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import { Web3 } from 'web3';
-const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
+const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
 
 interface DashState {
     isConnected: boolean;
@@ -19,10 +19,9 @@ export default function LearnerDashboard() {
     const [state, setState] = useState<DashState>({
         isConnected: false,
         account: null,
-        userName: null, // Store user name or address here
+        userName: null, 
     });
 
-    // Automatically connect wallet if available and fetch user details
     useEffect(() => {
         const autoConnectWallet = async () => {
             if (window.ethereum) {
@@ -84,8 +83,7 @@ export default function LearnerDashboard() {
                     </div>
                 </div>
             </header>
-
-            {/* Welcome Banner */}
+            
             <div className="bg-green-400 text-white p-6 rounded-2xl mb-8 shadow-lg">
                 <h2 className="text-3xl font-bold mb-2">
                     Welcome back, {state.userName ? state.userName : 'Loading...'}!
@@ -95,8 +93,7 @@ export default function LearnerDashboard() {
                     <div className="bg-yellow-400 h-full" style={{ width: '70%' }}></div>
                 </div>
             </div>
-
-            {/* Web3 Wallet */}
+            
             <div className="bg-yellow-200 p-4 rounded-2xl mb-8 shadow-lg flex items-center justify-between">
                 <div className="flex items-center">
                     <Wallet className="w-8 h-8 text-yellow-600 mr-3" />
@@ -111,7 +108,6 @@ export default function LearnerDashboard() {
                 </div>
             </div>
 
-            {/* AI-suggested content */}
             <section className="mb-8">
                 <div className="flex items-center mb-4">
                     <Brain className="w-8 h-8 text-purple-500 mr-2" />
@@ -149,8 +145,7 @@ export default function LearnerDashboard() {
                     ))}
                 </div>
             </section>
-
-            {/* Learning path */}
+            
             <section>
                 <h2 className="text-2xl font-semibold mb-4 text-blue-600">Your Learning Path</h2>
                 <div className="bg-white p-6 rounded-2xl shadow-lg">

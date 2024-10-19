@@ -8,19 +8,19 @@ import MainLayout from '@/components/Layouts/mainLayout';
 
 // Type definitions
 interface Course {
+  id: string;
   title: string;
   creator: string;
   description: string;
   mintingPrice: string;
 }
 
-// Initialize web3 instance
 let web3: Web3 | undefined;
 if (typeof window !== 'undefined') {
   web3 = new Web3(window.ethereum as any);
 }
 
-const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4'; // Replace with your contract address
+const contractAddress = '0x949474c73770874D0E725772c6f0de4CF234913e';
 const courseContract = web3 ? new web3.eth.Contract(ABI as any, contractAddress) : null;
 
 const ViewCourses: React.FC = () => {
@@ -33,17 +33,14 @@ const ViewCourses: React.FC = () => {
       try {
         if (!web3 || !courseContract) return;
 
-        // Ensure the user is connected to their MetaMask wallet
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         const accounts: string[] = await web3.eth.getAccounts();
         const account = accounts[0];
         setAccount(account);
 
-        // Fetch courses created by the user
         const coursesData: Course[] = await courseContract.methods.getCoursesByCreator(account).call();
         console.log(coursesData);
 
-        // Store the courses in the state
         setCourses(coursesData);
       } catch (error: any) {
         console.error('Error fetching courses:', error.message);
@@ -91,9 +88,9 @@ const ViewCourses: React.FC = () => {
                     </div>
                   </div>
                   
-                  <button className="w-full bg-yellow-300 text-yellow-800 px-4 py-2 rounded-full hover:bg-yellow-400 transition duration-300 flex items-center justify-center">
+                  <Link href={`/courses/${course.id}`} className="w-full bg-yellow-300 text-yellow-800 px-4 py-2 rounded-full hover:bg-yellow-400 transition duration-300 flex items-center justify-center">
                     View Course
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}

@@ -15,7 +15,7 @@ contract UserCourseManagement {
         bool isInstructor; 
         uint256 institutionId; 
         bool isRegistered; 
-        uint256 earnedFees; // Track fees earned by user
+        uint256 earnedFees;
     }
 
     struct Course {
@@ -24,14 +24,14 @@ contract UserCourseManagement {
         address creator;
         uint256 mintingPrice; 
         bool isActive; 
-        uint256 institutionId; // Link course to institution
-        uint256 totalMinted; // Track how many times the course has been minted
+        uint256 institutionId;
+        uint256 totalMinted; 
     }
 
     mapping(uint256 => Institution) public institutions; 
     mapping(address => User) public users; 
     mapping(uint256 => Course) public courses; 
-    mapping(uint256 => mapping(address => bool)) public courseEnrollments; // Track enrollments
+    mapping(uint256 => mapping(address => bool)) public courseEnrollments; 
 
     uint256 public institutionCount; 
     uint256 public courseCount; 
@@ -50,8 +50,7 @@ contract UserCourseManagement {
     }
 
     constructor() {
-        owner = msg.sender; // Set the owner to the account that deploys the contract
-    }
+        owner = msg.sender; 
 
     function createInstitution(string memory _name) external {
         require(bytes(_name).length > 0, "Institution name is required");
@@ -90,7 +89,7 @@ contract UserCourseManagement {
             isInstructor: false,
             institutionId: _institutionId,
             isRegistered: true,
-            earnedFees: 0 // Initialize earned fees
+            earnedFees: 0 
         });
 
         emit UserRegistered(msg.sender, false, _institutionId); 
@@ -108,7 +107,7 @@ contract UserCourseManagement {
             isInstructor: true,
             institutionId: _institutionId,
             isRegistered: true,
-            earnedFees: 0 // Initialize earned fees
+            earnedFees: 0 
         });
 
         emit UserRegistered(msg.sender, true, _institutionId); 
@@ -119,10 +118,8 @@ contract UserCourseManagement {
         require(bytes(_description).length > 0, "Course description is required");
         require(_mintingPrice > 0, "Minting price must be greater than zero");
 
-        // Fetch user details once
         User memory user = users[msg.sender];
 
-        // Create course and minimize writes
         courses[courseCount] = Course({
             title: _title,
             description: _description,
@@ -130,7 +127,7 @@ contract UserCourseManagement {
             mintingPrice: _mintingPrice,
             isActive: true,
             institutionId: user.institutionId,
-            totalMinted: 0 // Initialize total minted count
+            totalMinted: 0 
         });
 
         emit CourseCreated(courseCount, _title, msg.sender);
@@ -145,7 +142,6 @@ contract UserCourseManagement {
         require(course.isActive, "Course must be active");
         require(!courseEnrollments[_courseId][msg.sender], "User already enrolled in this course");
 
-        // Directly update enrollment
         courseEnrollments[_courseId][msg.sender] = true; 
 
         emit UserEnrolled(_courseId, msg.sender);
@@ -157,10 +153,8 @@ contract UserCourseManagement {
         require(course.isActive, "Course must be active");
         require(msg.value == course.mintingPrice, "Incorrect minting price");
 
-        // Increment total minted count and update user's earned fees
         course.totalMinted++;
         
-        // Calculate earnings for the user (e.g., 10% of minting price)
         uint256 earnings = (msg.value * 10) / 100;
         
         users[msg.sender].earnedFees += earnings;
@@ -169,20 +163,16 @@ contract UserCourseManagement {
     }
 
     function completeCourse(uint256 _courseId) external {
-        // Check if the user is enrolled in the specified course
         require(courseEnrollments[_courseId][msg.sender], "User must be enrolled in the course");
 
-        // Optional: Logic to update any course completion state can go here
+        uint256 earnings = users[msg.sender].earnedFees;
+        require(earnings > 0, "No earnings to claim"); 
 
-        // Example: Calculate earnings for completion (if applicable)
-        uint256 earnings = users[msg.sender].earnedFees; // Fetch current earnings
-        require(earnings > 0, "No earnings to claim"); // Ensure the user has earnings to claim
+        users[msg.sender].earnedFees = 0;
 
-        users[msg.sender].earnedFees = 0; // Reset after claiming
+        payable(msg.sender).transfer(earnings); 
 
-        payable(msg.sender).transfer(earnings); // Transfer earnings to the user
-
-        emit CourseCompleted(_courseId, msg.sender, earnings); // Optional: Emit an event for completion
+        emit CourseCompleted(_courseId, msg.sender, earnings);
     }
 
      function updateCourse(uint256 _courseId, string memory _newTitle, string memory _newDescription) external {
@@ -205,9 +195,8 @@ contract UserCourseManagement {
          require(user.earnedFees > 0, "No funds to withdraw");
 
          uint256 amount = user.earnedFees;
-         user.earnedFees = 0; // Reset after withdrawal
-         
-         payable(msg.sender).transfer(amount); // Transfer earnings to user
+         user.earnedFees = 0;          
+         payable(msg.sender).transfer(amount); 
      }
 
      function getUserDetails(address _userAddress) external view returns (User memory) {
