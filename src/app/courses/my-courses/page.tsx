@@ -57,7 +57,7 @@ const ViewCourses: React.FC = () => {
         const coursesData: Course[] = await courseContract.methods.getCoursesByCreator(account).call();
         console.log(coursesData);
 
-        setCourses(coursesData);
+        setCourses(coursesData.reverse());
       } catch (error: any) {
         console.error('Error fetching courses:', error.message);
         setErrorMessage('Failed to load courses. Please try again later.');

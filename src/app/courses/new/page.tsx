@@ -51,7 +51,6 @@ export default function CourseCreation() {
 
     useEffect(() => {
         const initWeb3 = async () => {
-            // Check if window is defined to make sure this is running in the browser
             if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -64,16 +63,15 @@ export default function CourseCreation() {
                     setContract(contractInstance)
                 } catch (error) {
                     console.error('Error initializing Web3:', error)
+                    toast.error('Failed to initialize Web3. Please make sure MetaMask is installed and connected.')
                 }
             } else {
                 console.log('Please install MetaMask!')
+                toast.error('MetaMask is not installed. Please install it to use this feature.')
             }
         }
         
-        // Only run Web3 initialization on the client-side
-        if (typeof window !== 'undefined') {
-            initWeb3()
-        }
+        initWeb3()
     }, [])
 
     const addModule = () => {
@@ -183,7 +181,7 @@ export default function CourseCreation() {
     
     const createCourse = async () => {
         if (!web3 || !contract || !account) {
-            console.error('Web3, contract, or account not initialized');
+            toast.error('Web3 is not initialized. Please make sure you are connected to MetaMask.');
             return;
         }
 
@@ -197,46 +195,20 @@ export default function CourseCreation() {
                 .send({ from: account, gas: estimatedGas });
 
             const courseId = result.events.CourseCreated.returnValues.courseId;
-            const courseData = {
-                courseId: courseId,
-                title: courseTitle,
-                description: courseDescription,
-                mintingPrice: mintingPrice,
-                creator: account,
-                modules: modules.map(module => ({
-                    ...module,
-                    lessons: module.lessons.map(lesson => ({
-                        ...lesson,
-                        content: lesson.type === 'quiz' ? JSON.parse(lesson.content) : lesson.content
-                    }))
-                }))
-            };
-
-            try {
-                console.log('Firestore DB:', db); 
-
-                if (!db) {
-                    throw new Error('Firestore db is not initialized');
-                }
-
-                const courseRef = await addDoc(collection(db, "courses"), courseData);
-                console.log('Course added with ID:', courseRef.id);
-
-                toast.success('Course created successfully on blockchain and Firestore!');
-                return true;
-            } catch (error) {
-                console.error('Error in course creation:', error);
-            }
-
+            
+            toast.success(`Course created successfully on blockchain! Course ID: ${courseId}`);
+            
+            console.log('Created course with ID:', courseId);
+            
         } catch (error) {
+            console.error('Error in course creation:', error);
             if (error instanceof Error) {
-                console.error('Error creating course:', error.message);
                 toast.error(`Error creating course: ${error.message}. Please try again.`);
                 if (error.message.includes('reverted by the EVM')) {
                     toast.error('Transaction reverted by the blockchain. Please check the contract logic.');
                 }
             } else {
-                console.error('An unknown error occurred during the course creation process');
+                toast.error('An unknown error occurred during the course creation process');
             }
         }
     };
@@ -244,7 +216,7 @@ export default function CourseCreation() {
     return (
         <MainLayout pageTitle={'Create New Course'} subTitle={''}>
             <div className="min-h-screen bg-yellow-100">
-                <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                 <div className="bg-white rounded-lg shadow-md p-6 mb-8">
                     <input
                         type="text"
                         value={courseTitle}
