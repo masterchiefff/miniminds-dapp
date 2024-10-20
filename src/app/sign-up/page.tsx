@@ -23,7 +23,7 @@ import {
 } from '@coinbase/onchainkit/wallet';
 import Link from 'next/link';
 
-const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
+const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
 
 interface Institution {
   id: number;

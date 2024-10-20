@@ -22,8 +22,7 @@ export default function CourseDetails() {
           </div>
         ))}
       </div>
-
-      {/* Main Content */}
+      
       <div className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-blue-600 mb-4">Introduction to Algebra</h1>

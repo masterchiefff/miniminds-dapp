@@ -1,25 +1,23 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import { useAuth } from '@/hooks/authentication';
-import { useRouter } from 'next/navigation';
-import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import Web3 from 'web3';
 import MainLayout from '@/components/Layouts/mainLayout';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
+
+const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
+
+function capitalizeWords(str: string) {
+  return str.split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+}
 
 const Dashboard: React.FC = () => {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [tokenBalance, setTokenBalance] = useState<number>(0);
-
-  // const { isRegistered, loading } = useAuth();
-  // const router = useRouter();
-
-  // if (!isRegistered) {
-  //   router.push('/'); 
-  //   return null; 
-  // }
-
   return (
-    <MainLayout pageTitle={'Dashboard'} subTitle={'summary of your activities'}>
+    <MainLayout pageTitle={`Welcome back`} subTitle={``}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-yellow-800 mb-4 flex items-center">
