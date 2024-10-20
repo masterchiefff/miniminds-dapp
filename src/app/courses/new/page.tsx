@@ -51,6 +51,7 @@ export default function CourseCreation() {
 
     useEffect(() => {
         const initWeb3 = async () => {
+            // Check if window is defined to make sure this is running in the browser
             if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -68,7 +69,11 @@ export default function CourseCreation() {
                 console.log('Please install MetaMask!')
             }
         }
-        initWeb3()
+        
+        // Only run Web3 initialization on the client-side
+        if (typeof window !== 'undefined') {
+            initWeb3()
+        }
     }, [])
 
     const addModule = () => {
