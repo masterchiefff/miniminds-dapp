@@ -43,6 +43,7 @@ contract UserCourseManagement {
     event CourseMinted(uint256 indexed courseId, address indexed user, uint256 amount);
     event CourseUpdated(uint256 indexed courseId, string newTitle, string newDescription);
     event CourseCompleted(uint256 indexed courseId, address indexed user, uint256 amount); 
+    event UserUnenrolled(uint256 indexed courseId, address indexed user);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not the contract owner");
@@ -51,7 +52,8 @@ contract UserCourseManagement {
 
     constructor() {
         owner = msg.sender; 
-
+    }
+    
     function createInstitution(string memory _name) external {
         require(bytes(_name).length > 0, "Institution name is required");
 
@@ -147,6 +149,14 @@ contract UserCourseManagement {
         emit UserEnrolled(_courseId, msg.sender);
     }
 
+    function unenrollFromCourse(uint256 _courseId) external {
+        require(courseEnrollments[_courseId][msg.sender], "User is not enrolled in this course");
+        
+        courseEnrollments[_courseId][msg.sender] = false;
+
+        emit UserUnenrolled(_courseId, msg.sender); 
+    }
+
     function mintCourse(uint256 _courseId) external payable {
         Course storage course = courses[_courseId];
         
@@ -239,4 +249,71 @@ contract UserCourseManagement {
         
          return creatorCourses;
      }
+
+    function getAllEnrolledCourses() external view returns (Course[] memory) {
+        uint256 count = 0;
+
+        for (uint256 i = 0; i < courseCount; i++) {
+            if (courseEnrollments[i][msg.sender]) {
+                count++;
+            }
+        }
+
+        Course[] memory enrolledCourses = new Course[](count);
+        uint256 index = 0;
+
+        for (uint256 i = 0; i < courseCount; i++) {
+            if (courseEnrollments[i][msg.sender]) {
+                enrolledCourses[index] = courses[i];
+                index++;
+            }
+        }
+
+        return enrolledCourses;
+    }
+
+    function getAllEnrolledCoursesByInstitution(uint256 _institutionId) external view returns (address[] memory, Course[][] memory) {
+        uint256 userCount = 0;
+        for (uint256 i = 0; i < institutionCount; i++) {
+            if (institutions[i].isActive) {
+                userCount++;
+            }
+        }
+
+        address[] memory enrolledUsers = new address[](userCount);
+        Course[][] memory enrolledCourses = new Course[][](userCount);
+
+        uint256 index = 0;
+
+        for (uint256 i = 0; i < userCount; i++) {
+            address userAddress = address(uint160(i)); 
+            User memory user = users[userAddress];
+
+            if (user.isRegistered && user.institutionId == _institutionId) {
+                enrolledUsers[index] = userAddress;
+
+                uint256 courseCountForUser = 0;
+                for (uint256 j = 0; j < courseCount; j++) {
+                    if (courseEnrollments[j][userAddress]) {
+                        courseCountForUser++;
+                    }
+                }
+
+                Course[] memory coursesForUser = new Course[](courseCountForUser);
+                uint256 courseIndex = 0;
+
+                for (uint256 j = 0; j < courseCount; j++) {
+                    if (courseEnrollments[j][userAddress]) {
+                        coursesForUser[courseIndex] = courses[j];
+                        courseIndex++;
+                    }
+                }
+
+                enrolledCourses[index] = coursesForUser;
+                index++;
+            }
+        }
+
+        return (enrolledUsers, enrolledCourses);
+    }
 }

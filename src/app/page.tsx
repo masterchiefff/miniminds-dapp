@@ -34,7 +34,7 @@ export default function Login() {
     account: null,
   });
   const router = useRouter();
-  const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
+  const contractAddress = '0x73917610c8924A677622f5682B678a7A0c907650';
   const [contract, setContract] = useState<any>(null); 
 
   const connectWallet = async () => {
