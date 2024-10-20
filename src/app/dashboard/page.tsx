@@ -21,6 +21,25 @@ const Dashboard: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState<string>('');
 
   useEffect(() => {
+    const fetchWalletAddress = async () => {
+      if (typeof window !== 'undefined' && window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        try {
+          const accounts = await web3.eth.getAccounts();
+          const address = accounts[0]; 
+          setWalletAddress(address);
+        } catch (error) {
+          console.error('Error fetching wallet address:', error);
+        }
+      } else {
+        console.error('Ethereum provider not found. Make sure you have MetaMask installed.');
+      }
+    };
+
+    fetchWalletAddress();
+  }, []);
+
+  useEffect(() => {
     const fetchUserName = async () => {
       if (walletAddress) {
         try {
@@ -44,27 +63,6 @@ const Dashboard: React.FC = () => {
 
     fetchUserName();
   }, [walletAddress]);
-
-  const fetchWalletAddress = async () => {
-    if (typeof window !== 'undefined' && window.ethereum) { // Check for window
-      const web3 = new Web3(window.ethereum);
-      const contract = new web3.eth.Contract(userRegistrationABI, contractAddress);
-
-      try {
-        const accounts = await web3.eth.getAccounts();
-        const address = accounts[0]; 
-        setWalletAddress(address);
-      } catch (error) {
-        console.error('Error fetching wallet address:', error);
-      }
-    } else {
-      console.error('Ethereum provider not found. Make sure you have MetaMask installed.');
-    }
-  };
-
-  useEffect(() => {
-    fetchWalletAddress(); // Fetch wallet address only on the client side
-  }, []);
 
   return (
     <MainLayout pageTitle={`Welcome back, ${capitalizeWords(userName)}`} subTitle={`Your Wallet address is; ${walletAddress}`}>
