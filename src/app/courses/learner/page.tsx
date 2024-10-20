@@ -67,7 +67,7 @@ export default function LearnerCourses() {
                         category: course.category || 'General',
                         level: course.level || 'N/A',
                         duration: `${Math.floor(Math.random() * 8) + 4} weeks`,
-                        reward: parseInt(course.mintingPrice),
+                        reward: parseInt(course.mintingPrice) / 1e18, // Convert Wei to ETH
                         isEnrolled: isEnrolled
                     };
                 }));
@@ -84,9 +84,92 @@ export default function LearnerCourses() {
             setCourses([]);
             toast.error("Failed to fetch courses. Please try again later.");
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
+    
+
+    // const handleCourseAction = async (courseId: string, isEnrolled: boolean) => {
+    //     if (!web3 || !contract || !account) {
+    //         toast.error('Web3 or contract not initialized. Please check your connection.');
+    //         return;
+    //     }
+    
+    //     const actionToastId = toast.loading(isEnrolled ? "Unenrolling from course..." : "Enrolling in course...");
+    
+    //     try {
+    //         if (isEnrolled) {
+    //             // Unenroll from the course
+    //             await contract.methods.unenrollFromCourse(courseId).send({ from: account });
+    //             toast.update(actionToastId, { 
+    //                 render: `Successfully unenrolled from course ${courseId}`, 
+    //                 type: "success", 
+    //                 isLoading: false,
+    //                 autoClose: 5000
+    //             });
+    
+    //             // Update the local state to reflect the new enrollment status
+    //             setCourses(prevCourses => prevCourses.map(course => 
+    //                 course.id === courseId ? {...course, isEnrolled: false} : course
+    //             ));
+    //         } else {
+    //             // Find the course to enroll
+    //             const courseToEnroll = courses.find(course => course.id === courseId);
+    
+    //             // Check if the course exists
+    //             if (!courseToEnroll) {
+    //                 toast.update(actionToastId, { 
+    //                     render: `Course ${courseId} not found.`, 
+    //                     type: "error", 
+    //                     isLoading: false,
+    //                     autoClose: 5000
+    //                 });
+    //                 return;
+    //             }
+    
+    //             // Get the course's minting price
+    //             const mintingPrice = web3.utils.toWei(courseToEnroll.reward.toString(), 'ether'); // Convert to Wei
+    
+    //             // Check the learner's ETH balance
+    //             const balance = await web3.eth.getBalance(account);
+    //             if (parseFloat(balance.toString()) < parseFloat(mintingPrice)) {
+    //                 // Convert the balance from Wei to Ether for display
+    //                 const balanceInEth = web3.utils.fromWei(balance, 'ether');
+    
+    //                 toast.update(actionToastId, { 
+    //                     render: `Insufficient ETH to enroll in this course. Your balance: ${balanceInEth} ETH`, 
+    //                     type: "error", 
+    //                     isLoading: false,
+    //                     autoClose: 5000
+    //                 });
+    //                 return;
+    //             }
+    
+    //             // Proceed with enrollment
+    //             await contract.methods.enrollInCourse(courseId).send({ from: account, value: mintingPrice });
+    //             toast.update(actionToastId, { 
+    //                 render: `Successfully enrolled in course ${courseId}`, 
+    //                 type: "success", 
+    //                 isLoading: false,
+    //                 autoClose: 5000
+    //             });
+    
+    //             // Update the local state to reflect the new enrollment status
+    //             setCourses(prevCourses => prevCourses.map(course => 
+    //                 course.id === courseId ? {...course, isEnrolled: true} : course
+    //             ));
+    //         }
+    //     } catch (error) {
+    //         console.error("Error handling course action:", error);
+    //         toast.update(actionToastId, { 
+    //             render: `Failed to ${isEnrolled ? 'unenroll from' : 'enroll in'} the course. Please try again.`, 
+    //             type: "error", 
+    //             isLoading: false,
+    //             autoClose: 5000
+    //         });
+    //     }
+    // };
+    
 
     const handleCourseAction = async (courseId: string, isEnrolled: boolean) => {
         if (!web3 || !contract || !account) {
@@ -191,7 +274,7 @@ export default function LearnerCourses() {
                                     </Link>
                                     <div className="flex gap-4 text-sm text-gray-600">
                                         <span>{course.category}</span>
-                                        <span>{course.level}</span>
+                                        <span>Course Level: {course.level}</span>
                                         <span className="flex items-center gap-1">
                                             <Clock className="w-4 h-4" />
                                             {course.duration}
@@ -200,7 +283,7 @@ export default function LearnerCourses() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div className="bg-yellow-100 rounded-full px-3 py-1 flex items-center">
-                                        <span className="font-bold text-yellow-700 mr-1">{course.reward}</span>
+                                        <span className="font-bold text-yellow-700 mr-1">{course.reward.toFixed(4)} ETH</span>
                                         <Award className="w-4 h-4 text-yellow-600" />
                                     </div>
                                     <button 
