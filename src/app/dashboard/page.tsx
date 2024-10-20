@@ -7,7 +7,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
 
-const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
+const contractAddress = '0x73917610c8924A677622f5682B678a7A0c907650';
 
 function capitalizeWords(str: string) {
   return str.split(' ')

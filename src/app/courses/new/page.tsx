@@ -58,7 +58,7 @@ export default function CourseCreation() {
                     setWeb3(web3Instance)
                     const accounts = await web3Instance.eth.getAccounts()
                     setAccount(accounts[0])
-                    const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB' 
+                    const contractAddress = '0x73917610c8924A677622f5682B678a7A0c907650' 
                     const contractInstance = new web3Instance.eth.Contract(ABI, contractAddress)
                     setContract(contractInstance)
                 } catch (error) {

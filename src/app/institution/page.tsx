@@ -27,7 +27,7 @@ const InstitutionRegistration: React.FC = () => {
   useEffect(() => {
     if (typeof window !== 'undefined' && window.ethereum) {
       const web3 = new Web3(window.ethereum);
-      const contractAddress = "0x22790A4E84Ba310939A659969aAF22635fc9CEcB";
+      const contractAddress = "0x73917610c8924A677622f5682B678a7A0c907650";
       const contractInstance = new web3.eth.Contract(UserRegistrationABI, contractAddress);
       setContract(contractInstance);
     } else {

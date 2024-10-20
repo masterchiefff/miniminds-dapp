@@ -1,5 +1,31 @@
 [
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_institutionId",
+				"type": "uint256"
+			}
+		],
+		"name": "activateInstitution",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			}
+		],
+		"name": "completeCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
@@ -105,6 +131,55 @@
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_title",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_mintingPrice",
+				"type": "uint256"
+			}
+		],
+		"name": "createCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "createInstitution",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			}
+		],
+		"name": "enrollInCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -128,6 +203,99 @@
 		],
 		"name": "InstitutionCreated",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			}
+		],
+		"name": "mintCourse",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_institutionId",
+				"type": "uint256"
+			}
+		],
+		"name": "registerInstructor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_institutionId",
+				"type": "uint256"
+			}
+		],
+		"name": "registerUser",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			}
+		],
+		"name": "unenrollFromCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_courseId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_newTitle",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_newDescription",
+				"type": "string"
+			}
+		],
+		"name": "updateCourse",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_institutionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_newName",
+				"type": "string"
+			}
+		],
+		"name": "updateInstitution",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -174,27 +342,27 @@
 		"type": "event"
 	},
 	{
+		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": true,
 				"internalType": "uint256",
-				"name": "_institutionId",
+				"name": "courseId",
 				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
 			}
 		],
-		"name": "activateInstitution",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "UserUnenrolled",
+		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_courseId",
-				"type": "uint256"
-			}
-		],
-		"name": "completeCourse",
+		"inputs": [],
+		"name": "withdraw",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -286,55 +454,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_title",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_mintingPrice",
-				"type": "uint256"
-			}
-		],
-		"name": "createCourse",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "createInstitution",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_courseId",
-				"type": "uint256"
-			}
-		],
-		"name": "enrollInCourse",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "getAllCourses",
 		"outputs": [
@@ -379,6 +498,117 @@
 				"internalType": "struct UserCourseManagement.Course[]",
 				"name": "",
 				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllEnrolledCourses",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "mintingPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isActive",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "institutionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalMinted",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct UserCourseManagement.Course[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_institutionId",
+				"type": "uint256"
+			}
+		],
+		"name": "getAllEnrolledCoursesByInstitution",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "creator",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "mintingPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "isActive",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "institutionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "totalMinted",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct UserCourseManagement.Course[][]",
+				"name": "",
+				"type": "tuple[][]"
 			}
 		],
 		"stateMutability": "view",
@@ -585,19 +815,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_courseId",
-				"type": "uint256"
-			}
-		],
-		"name": "mintCourse",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -608,73 +825,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_institutionId",
-				"type": "uint256"
-			}
-		],
-		"name": "registerInstructor",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_institutionId",
-				"type": "uint256"
-			}
-		],
-		"name": "registerUser",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_courseId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_newTitle",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_newDescription",
-				"type": "string"
-			}
-		],
-		"name": "updateCourse",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_institutionId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_newName",
-				"type": "string"
-			}
-		],
-		"name": "updateInstitution",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -714,13 +864,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

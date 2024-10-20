@@ -20,7 +20,7 @@ if (typeof window !== 'undefined') {
   web3 = new Web3(window.ethereum as any);
 }
 
-const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
+const contractAddress = '0x73917610c8924A677622f5682B678a7A0c907650';
 const courseContract = web3 ? new web3.eth.Contract(ABI as any, contractAddress) : null;
 
 const SkeletonCard = () => {
@@ -120,7 +120,7 @@ const ViewCourses: React.FC = () => {
                 </div>
               ))
             ) : (
-              <p>You haven't created any courses yet.</p>
+              <p className="text-yellow-600">You haven't created any courses yet.</p>
             )}
           </div>
         )}
