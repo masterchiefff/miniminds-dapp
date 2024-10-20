@@ -1,42 +1,37 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Web3 from 'web3'; // Import Web3
-// import { useAuth } from '@/hooks/authentication';
-import { useRouter } from 'next/navigation';
-import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
+import Web3 from 'web3';
 import MainLayout from '@/components/Layouts/mainLayout';
-import { db } from '@/lib/firebase'; // Ensure you have Firebase configured
-import { collection, query, where, getDocs } from 'firebase/firestore'; // Import Firestore methods
-import userRegistrationABI from '@/contracts/UserRegistrationABI.json'
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import userRegistrationABI from '@/contracts/UserRegistrationABI.json';
+import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
 
 const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
 
 function capitalizeWords(str: string) {
-  return str.split(' ') 
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
-            .join(' '); 
+  return str.split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
 }
 
 const Dashboard: React.FC = () => {
   const [userName, setUserName] = useState<string>('');
   const [walletAddress, setWalletAddress] = useState<string>('');
-  
-  // const { isRegistered, loading } = useAuth();
-  // const router = useRouter();
 
   useEffect(() => {
     const fetchUserName = async () => {
       if (walletAddress) {
         try {
-          const usersRef = collection(db, 'users'); // Reference to the 'users' collection
-          const q = query(usersRef, where('walletAddress', '==', walletAddress)); // Query to match the walletAddress
-          const querySnapshot = await getDocs(q); // Execute the query
+          const usersRef = collection(db, 'users');
+          const q = query(usersRef, where('walletAddress', '==', walletAddress));
+          const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
             querySnapshot.forEach((doc) => {
               const userData = doc.data();
-              setUserName(userData.name); // Assuming the name field is named 'name'
+              setUserName(userData.name);
             });
           } else {
             console.error("No such document!");
@@ -50,20 +45,14 @@ const Dashboard: React.FC = () => {
     fetchUserName();
   }, [walletAddress]);
 
-
-  // Function to fetch user's wallet address from the smart contract
   const fetchWalletAddress = async () => {
-    if (window.ethereum) {
+    if (typeof window !== 'undefined' && window.ethereum) { // Check for window
       const web3 = new Web3(window.ethereum);
       const contract = new web3.eth.Contract(userRegistrationABI, contractAddress);
 
       try {
         const accounts = await web3.eth.getAccounts();
-        const address = accounts[0]; // Get the first account (wallet address)
-
-        // Optionally, if your contract has a function to get wallet address:
-        // const address = await contract.methods.getUserWalletAddress().call();
-
+        const address = accounts[0]; 
         setWalletAddress(address);
       } catch (error) {
         console.error('Error fetching wallet address:', error);
@@ -73,13 +62,9 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchWalletAddress(); // Fetch wallet address when the user is registered
-  //   // if (isRegistered) {
-  //   // } else {
-  //   //   router.push('/'); // Redirect to login if not registered
-  //   // }
-  // }, [isRegistered, router]);
+  useEffect(() => {
+    fetchWalletAddress(); // Fetch wallet address only on the client side
+  }, []);
 
   return (
     <MainLayout pageTitle={`Welcome back, ${capitalizeWords(userName)}`} subTitle={`Your Wallet address is; ${walletAddress}`}>
