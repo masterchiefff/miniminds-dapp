@@ -16,57 +16,8 @@ function capitalizeWords(str: string) {
 }
 
 const Dashboard: React.FC = () => {
-  const [userName, setUserName] = useState<string>('');
-  const [walletAddress, setWalletAddress] = useState<string>('');
-
-  useEffect(() => {
-    const fetchWalletAddress = async () => {
-      if (typeof window !== 'undefined' && window.ethereum) {
-        const web3 = new Web3('https://sepolia.base.org');
-        try {
-          const accounts = await web3.eth.getAccounts();
-          const address = accounts[0]; 
-          setWalletAddress(address);
-        } catch (error) {
-          console.error('Error fetching wallet address:', error);
-        }
-      } else {
-        console.error('Ethereum provider not found. Make sure you have MetaMask installed.');
-      }
-    };
-
-    if (typeof window !== 'undefined') {
-      fetchWalletAddress();
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchUserName = async () => {
-      if (walletAddress) {
-        try {
-          const usersRef = collection(db, 'users');
-          const q = query(usersRef, where('walletAddress', '==', walletAddress));
-          const querySnapshot = await getDocs(q);
-
-          if (!querySnapshot.empty) {
-            querySnapshot.forEach((doc) => {
-              const userData = doc.data();
-              setUserName(userData.name);
-            });
-          } else {
-            console.error("No such document!");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    };
-
-    fetchUserName();
-  }, [walletAddress]);
-
   return (
-    <MainLayout pageTitle={`Welcome back, ${capitalizeWords(userName)}`} subTitle={`Your Wallet address is; ${walletAddress}`}>
+    <MainLayout pageTitle={`Welcome back`} subTitle={``}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-yellow-800 mb-4 flex items-center">
