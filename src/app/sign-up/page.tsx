@@ -21,6 +21,7 @@ import {
   WalletDropdownBasename, 
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import Link from 'next/link';
 
 const contractAddress = '0xf1A6e40d86ef1D119f9978B7c5dcd34Ff34566a4';
@@ -31,12 +32,17 @@ interface Institution {
 }
 
 export default function UserRegistration() {
+  
   const [walletAddress, setWalletAddress] = useState<string>('');
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [selectedInstitution, setSelectedInstitution] = useState<string>('');
   const [role, setRole] = useState<'learner' | 'instructor'>('learner'); 
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const router = useRouter();
+  const { address } = useAccount();
+  const { connectors, connect } = useConnect();
+  const { disconnect } = useDisconnect();
+
 
   useEffect(() => {
     loadWeb3();
@@ -170,6 +176,7 @@ export default function UserRegistration() {
               </WalletDropdown>
             </Wallet>
           </div>
+          
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
@@ -217,6 +224,42 @@ export default function UserRegistration() {
               Register <ArrowRight className="ml-2 h-5 w-5" />
             </button>
           </form>
+        </>
+      )}
+      {address ? (
+        <div className="flex items-center gap-1">
+          <h1 className="font-bold my-2 text-center">Wallet connected.</h1>
+          <a href="#" 
+          onClick={(e) => {
+            e.preventDefault();
+            disconnect();
+          }}
+          className="text-primary">
+            Disconnect?
+          </a>
+        </div>
+      ) : (
+        <>
+          <h1 className="text-[23px] font-bold my-2 text-center">Connect Wallet</h1>
+          <div className="flex gap-2 justify-center">
+            <button
+              onClick={handleConnectWallet}
+              className="h-10 rounded-md mx-2 bg-yellow-600 text-white flex-1 text-[10px] p-2"
+              type="button"
+            >
+              Connect MetaMask
+            </button>
+            {connectors.map((connector) => (
+              <button
+                key={connector.id}
+                className="h-10 rounded-md mx-2 bg-primary flex-1 text-[10px] p-2"
+                onClick={() => connect({ connector })}
+                type="button"
+              >
+                <div>{connector.name}</div>
+              </button>
+            ))}
+          </div>
         </>
       )}
 

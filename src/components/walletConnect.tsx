@@ -2,6 +2,7 @@ import {
     ConnectWallet, 
     Wallet, 
     WalletDropdown, 
+    WalletDropdownBasename, 
     WalletDropdownDisconnect 
 } from '@coinbase/onchainkit/wallet'; 
 import {
@@ -9,6 +10,7 @@ import {
     Avatar,
     Name,
     Identity,
+    EthBalance,
 } from '@coinbase/onchainkit/identity';
 import { color } from '@coinbase/onchainkit/theme';
 
@@ -29,7 +31,9 @@ export function WalletComponents({ setWalletAddress }: WalletComponentsProps) {
                         <Avatar />
                         <Name />
                         <Address className={color.foregroundMuted} />
+                        <EthBalance />
                     </Identity>
+                    <WalletDropdownBasename />
                     <WalletDropdownDisconnect />
                 </WalletDropdown>
             </Wallet>

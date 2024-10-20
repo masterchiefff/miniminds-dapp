@@ -17,6 +17,16 @@
   -webkit-text-size-adjust: 100%;
 }
 
+
+.blob-shape {
+  clip-path: circle(50%);
+  mask-image: radial-gradient(circle at end, transparent 70%, black 100%);
+}
+
+
+
+
+
 @media (prefers-color-scheme: light) {
   :root {
     background-color: #f8f8f8;
