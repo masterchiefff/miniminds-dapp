@@ -93,19 +93,26 @@ export default function LearnerCourses() {
             toast.error('Web3 or contract not initialized. Please check your connection.');
             return;
         }
-
+    
         const actionToastId = toast.loading(isEnrolled ? "Unenrolling from course..." : "Enrolling in course...");
-
+    
         try {
             if (isEnrolled) {
-                // Implement unenroll functionality here if your contract supports it
+                // Unenroll from the course
+                await contract.methods.unenrollFromCourse(courseId).send({ from: account });
                 toast.update(actionToastId, { 
-                    render: "Unenroll functionality not implemented", 
-                    type: "warning", 
+                    render: `Successfully unenrolled from course ${courseId}`, 
+                    type: "success", 
                     isLoading: false,
                     autoClose: 5000
                 });
+                
+                // Update the local state to reflect the new enrollment status
+                setCourses(prevCourses => prevCourses.map(course => 
+                    course.id === courseId ? {...course, isEnrolled: false} : course
+                ));
             } else {
+                // Enroll in the course
                 await contract.methods.enrollInCourse(courseId).send({ from: account });
                 toast.update(actionToastId, { 
                     render: `Successfully enrolled in course ${courseId}`, 
@@ -128,7 +135,7 @@ export default function LearnerCourses() {
                 autoClose: 5000
             });
         }
-    };
+    };    
 
     function capitalizeFirstLetter(title: string) {
         return title.charAt(0).toUpperCase() + title.slice(1);
