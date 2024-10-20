@@ -5,7 +5,6 @@ import Web3 from 'web3';
 import MainLayout from '@/components/Layouts/mainLayout';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import userRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import { Book, Calendar, Trophy, BarChart2 } from 'lucide-react';
 
 const contractAddress = '0x22790A4E84Ba310939A659969aAF22635fc9CEcB';
@@ -36,7 +35,9 @@ const Dashboard: React.FC = () => {
       }
     };
 
-    fetchWalletAddress();
+    if (typeof window !== 'undefined') {
+      fetchWalletAddress();
+    }
   }, []);
 
   useEffect(() => {
