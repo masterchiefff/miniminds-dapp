@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchWalletAddress = async () => {
       if (typeof window !== 'undefined' && window.ethereum) {
-        const web3 = new Web3(window.ethereum);
+        const web3 = new Web3('https://sepolia.base.org');
         try {
           const accounts = await web3.eth.getAccounts();
           const address = accounts[0]; 
