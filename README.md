@@ -50,7 +50,7 @@ Miniminds is built on Next.js. To install and run the platform locally, follow t
    http://localhost:3000
 
 ## Usage
-To view the actual data and explore the features of BrightQuest, you must sign up under the Master Institute. You can sign up either as a Learner or an Instructor to access available courses and functionality.
+To view the actual data and explore the features of Miniminds, you must sign up under the **Master Institute**. You can sign up either as a Learner or an Instructor to access available courses and functionality.
 
 ## Getting Started
 
