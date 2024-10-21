@@ -11,7 +11,7 @@
   - [Content Monetization and Wallets](#content-monetization-and-wallets)
   - [Donation and Funding Drives](#donation-and-funding-drives)
   - [Blockchain-Based Credentialing](#blockchain-based-credentialing)
-- [How to Use BrightQuest](#how-to-use-brightquest)
+- [How to Use Miniminds](#how-to-use-miniminds)
   - [For Creators (Teachers)](#for-creators-teachers)
   - [For Learners](#for-learners)
 - [Wallet Setup and Transactions](#wallet-setup-and-transactions)
@@ -34,7 +34,7 @@ Miniminds is built on Next.js. To install and run the platform locally, follow t
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/BrightQuest.git
+   git clone https://github.com/YourUsername/minimids-dapp.git
 
 2. Navigate to the project directory:
    ``` bash
