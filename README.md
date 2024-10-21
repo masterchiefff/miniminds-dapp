@@ -64,7 +64,7 @@ To get started as a creator, you need to:
 ## Platform Features
 
 ### Academic Progress Tracking
-BrightQuest provides a robust system for tracking learner progress, enabling instructors to monitor engagement and course completion rates.
+Miniminds provides a robust system for tracking learner progress, enabling instructors to monitor engagement and course completion rates.
 
 ### Content Monetization and Wallets
 Creators can monetize their content by setting course fees in ETH. Learners can make payments directly through the platform using their crypto wallets.
