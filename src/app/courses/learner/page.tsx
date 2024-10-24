@@ -67,7 +67,7 @@ export default function LearnerCourses() {
                         category: course.category || 'General',
                         level: course.level || 'N/A',
                         duration: `${Math.floor(Math.random() * 8) + 4} weeks`,
-                        reward: parseInt(course.mintingPrice) / 1e18, // Convert Wei to ETH
+                        reward: parseInt(course.mintingPrice) / 1e18,
                         isEnrolled: isEnrolled
                     };
                 }));
@@ -267,7 +267,7 @@ export default function LearnerCourses() {
                                     <Book className="text-blue-500 w-8 h-8" />
                                 </div>
                                 <div className="flex-1">
-                                    <Link href={`/courses/learner/course-details/${course.id}`} passHref>
+                                    <Link href={`/courses/learner/${course.id}`} passHref>
                                         <h3 className="text-xl font-semibold text-blue-600 mb-2 hover:underline">
                                             {capitalizeFirstLetter(course.title)}
                                         </h3>
@@ -296,7 +296,7 @@ export default function LearnerCourses() {
                                     >
                                         {course.isEnrolled ? "Unenroll" : "Enroll"}
                                     </button>
-                                    <Link href={`/courses/learner/course-details/${course.id}`} passHref>
+                                    <Link href={`/courses/learner/${course.id}`} passHref>
                                         <ChevronRight className="text-blue-400 cursor-pointer" />
                                     </Link>
                                 </div>
