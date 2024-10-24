@@ -3,7 +3,7 @@ import { Book, Clock, Award, Star, User, Play, CheckCircle, ChevronRight } from 
 export default function CourseDetails() {
   return (
     <div className="flex h-screen bg-blue-100">
-      {/* Sidebar */}
+      
       <div className="w-16 bg-yellow-400 flex flex-col items-center py-4 space-y-8">
         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
           <Book className="text-yellow-400" />
@@ -123,8 +123,7 @@ export default function CourseDetails() {
           </div>
         </div>
       </div>
-
-      {/* Right Sidebar - Course Details */}
+      
       <div className="w-80 bg-green-100 p-6">
         <div className="bg-white rounded-xl p-6 sticky top-6">
           <h2 className="text-2xl font-bold text-blue-600 mb-4">Course Details</h2>
