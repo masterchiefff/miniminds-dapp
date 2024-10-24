@@ -73,6 +73,8 @@ export default function UserRegistration() {
           fetchedInstitutions.push({ id: i, name: institution.name });
         }
       }
+
+      console.log(fetchedInstitutions)
   
       setInstitutions(fetchedInstitutions);
     } catch (error) {

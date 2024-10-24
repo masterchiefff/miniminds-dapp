@@ -67,6 +67,8 @@ export default function CoursesPage(): JSX.Element {
       try {
         const allCourses = await contract.methods.getAllCourses().call();
         const filteredCourses = allCourses.filter((course: any) => course.institutionId === userInstitutionId);
+
+        console.log(allCourses)
   
         const formattedCourses: Course[] = filteredCourses.map((course: any, index: number) => ({
           id: index,
