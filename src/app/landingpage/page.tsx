@@ -38,18 +38,7 @@ const LandingPage = () => {
       </button>
     </Link>
         </div>
-    <div className="w-full md:w-1/2 flex justify-center pd-8 md:p-12">
-      {/* Use Next.js Image component with correct src path */}
-      
-      
-      <Image
-        src="/assets/images/kids3.jpeg" // Path relative to the `public` folder
-        alt="kids3"
-        width={500}
-        height={200}
-        className="md:block hidden bg-transparent  blob-shape"
-      />
-    </div>
+  
       </section>
 
       {/* Why MiniMinds Section */}
