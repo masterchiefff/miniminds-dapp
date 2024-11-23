@@ -3,18 +3,17 @@ import { base } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 
 export function getConfig() {
-  const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
-
-  if (!projectId) {
-    throw new Error('NEXT_PUBLIC_WC_PROJECT_ID is not defined');
-  }
-
   return createConfig({
     chains: [base],
     connectors: [
       injected(),
-      coinbaseWallet(),
-      walletConnect({ projectId }), // projectId is now guaranteed to be a string
+      coinbaseWallet({
+        appName: 'miniminds', // Set the app name to Miniminds
+      }),
+      walletConnect({
+        projectId: '8e9799aea33e1610e8a7eb7e67dc0ef6', // Use your project ID
+      }),
+      
     ],
     storage: createStorage({
       storage: cookieStorage,
@@ -26,8 +25,9 @@ export function getConfig() {
   });
 }
 
+// Extend the wagmi module to register your config
 declare module 'wagmi' {
   interface Register {
-    config: ReturnType<typeof getConfig>
+    config: ReturnType<typeof getConfig>;
   }
 }

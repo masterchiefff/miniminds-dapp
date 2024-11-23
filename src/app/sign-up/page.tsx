@@ -21,6 +21,7 @@ import {
   WalletDropdownBasename, 
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import Link from 'next/link';
 
 const contractAddress = '0x73917610c8924A677622f5682B678a7A0c907650';
@@ -37,6 +38,9 @@ export default function UserRegistration() {
   const [role, setRole] = useState<'learner' | 'instructor'>('learner'); 
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const router = useRouter();
+  const { address } = useAccount();
+  const { connectors, connect } = useConnect();
+  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     loadWeb3();
@@ -172,6 +176,19 @@ export default function UserRegistration() {
               </WalletDropdown>
             </Wallet>
           </div>
+           <h1 className="text-[23px] font-bold my-2 text-center">Connect Wallet</h1>
+                <div className="flex gap-1">
+                  {connectors.map((connector) => (
+                    <button
+                      key={connector.id}
+                      className="h-10 rounded-md mx-2 bg-primary flex-1 text-[10px] p-2 "
+                      onClick={() => connect({ connector })}
+                      type="button"
+                    >
+                      <div>{connector.name}</div>
+                    </button>
+                  ))}
+                </div>
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div>

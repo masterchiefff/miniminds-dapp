@@ -5,6 +5,12 @@ import Link from 'next/link';
 import Web3 from 'web3';
 import { useRouter } from 'next/navigation';
 import UserRegistrationABI from '@/contracts/UserRegistrationABI.json';
+import { collection, addDoc } from 'firebase/firestore';
+//import { db } from '../lib/firebase';
+//import bcrypt from 'bcryptjs';
+//import { addUserData } from '../../lib/firestore.js'; 
+
+
 import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';

@@ -9,6 +9,7 @@ import { getConfig } from '../wagmi'
 import { Providers } from './providers'
 
 import '@coinbase/onchainkit/styles.css';
+import LandingPage from './landingpage/page'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,6 +30,8 @@ export default function RootLayout(props: { children: ReactNode }) {
       </head>
       <body className={inter.className}>
         <Providers initialState={initialState}>{props.children}</Providers>
+        
+        
       </body>
     </html>
   )
