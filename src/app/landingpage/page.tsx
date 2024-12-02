@@ -59,6 +59,15 @@ const LandingPage = () => {
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-purple-800 text-center mb-10">Our Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          { /*Decentralization Feature */ }
+          <div className='p-6 bg-yellow-200 rounded-lg shadow-lg transition-transform transform hover:scale-105'>
+            <div className='flex justify-center'> 
+              <Image src= {peerLearningImg} alt="Peer Learning" width={80} height={80}/>
+            </div>
+            <h3 className='text-2xl font-bold text-purple-800 text-center'> Decentralization </h3>
+            <p className='text-blue-800 mt-2 text-center'> Empowers our tutors with full control over their educational content and data, ensuring privacy and autonomy. 
+              For students, it offers transparent access to learning materials and verifiable credentials, fostering trust and personalized educational experiences.</p>
+          </div>
           
           {/* Personalized Learning Feature */}
           <div className="p-6 bg-yellow-200 rounded-lg shadow-lg transition-transform transform hover:scale-105">
