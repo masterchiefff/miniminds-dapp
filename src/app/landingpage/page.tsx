@@ -10,12 +10,13 @@ import tokenRewardsImg from '/public/assets/icons/rewards.png';
 import crowdfundingImg from '/public/assets/icons/crowdfunding.png';
 import progressTrackingImg from '/public/assets/icons/progress-tracking.png';
 import peerLearningImg from '/public/assets/icons/peer-learning.png';
-import MiniMinds from '/public/assets/images/MiniMinds-Learning-Dashboard.png';
+import Features from '@/components/Features/page';
+
 
 import kids2 from './public/assets/images/kids3.jpeg';
 //import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import Features from '@/components/WhyMiniMinds';
+
 
 const LandingPage = () => {
   return (
