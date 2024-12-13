@@ -1,4 +1,7 @@
 
+"use client"
+
+import {Brain, Rocket, Users} from "lucide-react"
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,7 +10,33 @@ import tokenRewardsImg from '/public/assets/icons/rewards.png';
 import crowdfundingImg from '/public/assets/icons/crowdfunding.png';
 import progressTrackingImg from '/public/assets/icons/progress-tracking.png';
 import peerLearningImg from '/public/assets/icons/peer-learning.png';
+import MiniMinds from '/public/assets/images/MiniMinds-Learning-Dashboard.png';
+
 import kids2 from './public/assets/images/kids3.jpeg';
+//import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const Features = () => {
+  const features = [
+    {
+      icon: <Brain className="w-10 h-10 text-primary" />,
+      title: "AI-Powered Learning",
+      description: "Personalized lesson suggestions based on learning style and progress",
+    },
+    {
+      icon: <Rocket className="w-10 h-10 text-primary" />,
+      title: "Learn and Earn",
+      description: "Earn Tockens as you learn and finish your Learning goals"
+    },
+    {
+
+      icon: <Users className="w-10 h-10 text-primary" />,
+      title: "Interactive Community",
+      description: "Connect with other learners and contribute to the platform's growth"
+    },
+
+  ];
+}
 
 const LandingPage = () => {
   return (
@@ -26,25 +55,87 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       
-      <section className="min-h-full bg-yellow-300 flex flex-col-reverse md:flex-row items-center px-6 sm:px-10 py-12 md:py-0">
-        <div className="w-full md:w-1/2 space-y-6">
-          <h1 className="text-4xl lg:text-5xl font-bold text-yellow-950">Empowering Young Minds for a Better Tommorow</h1>
-          <p className="text-xl text-base ext-xl text-yellow-950 mt-4 sm:text-lg"> Personalized learning and support for every student. Rewarding both students and teachers with tokens, while bridging the gap in education for underserved communities.
+      {/*<section className="min-h-full bg-yellow-300 flex flex-col-reverse md:flex-row items-center px-6 sm:px-10 py-12 md:py-0">
+      */}
+      <section className="relative overflow-hidden bg-green-200 min-h-[600px] flex items-center">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="space-y-6">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-4xl md:text-6xl font-bold text-gray-900"
+            >
+              Welcome to <span className="text-secondary text-purple-600">Mini</span>
+              <span className="text-primary text-green-600">Minds</span>
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-xl text-gray-600"
+            >
+              A decentralized learning platform where kids aged 5-17 can learn, play, and earn through interactive lessons in math, science, and coding.
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="flex gap-4"
+            >
+              
+            </motion.div>
+            <div className='py-2'>
+            <button className="bg-green-500 rounded-lg hover:bg-green-300 text-white-800 px-4 py-2 mr-2 shadow-md "> Join as a student</button>
+            <button className="bg-white text-purple-600 px-4 py-2 rounded-md border-purple-600  shadow-md ">Become an instructor</button>
 
-          </p>
-          <Link href="/sign-up">
-      <button className="bg-yellow-600 text-white px-8 py-3 mt-6 rounded-lg shadow-lg hover:bg-yellow-950">
-        Get Started
-      </button>
-    </Link>
+            </div>
+            
+          </div>
+          <div className="relative hidden md:block">
+            <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6 }}
+            className="rounded-lg shadow-xl">
+              <Image
+              src="/assets/images/MiniMinds-Learning-Dashboard.png"
+
+              alt="MiniMinds Learning Dashboard"
+              width={800}
+              height={800}
+              />
+              </motion.div>
+          </div>
+
+
         </div>
-  
-      </section>
+      </div>
+    
+    </section>
 
       {/* Why MiniMinds Section */}
       <section id="why" className="bg-blue-200 py-12">
+      <div className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-12">Why Choose MiniMinds?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {Features.map((feature, index) => (
+            <div
+              key={index}
+              className="p-6 rounded-xl bg-muted hover:shadow-lg transition-shadow duration-300"
+            >
+              <div className="mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-purple-800 text-center mb-6">Why MiniMinds?</h2>
+          <h2 className="text-3xl font-bold text-purple-800 text-center mb-6">Why  Choose MiniMinds?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="text-lg text-blue-800">
               <p>In many rural areas, teachers are overwhelmed, managing over 70 students at a time. Only the brightest receive attention, leaving many kids behind. MiniMinds provides personalized learning to ensure every child gets the education they deserve.</p>
@@ -55,7 +146,9 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-      <section id="features" className="bg-green-200 py-12">
+
+      {/*features section */}
+      <section id="features" className="bg-blue-200 py-12">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-purple-800 text-center mb-10">Our Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -65,8 +158,8 @@ const LandingPage = () => {
               <Image src= {peerLearningImg} alt="Peer Learning" width={80} height={80}/>
             </div>
             <h3 className='text-2xl font-bold text-purple-800 text-center'> Decentralization </h3>
-            <p className='text-blue-800 mt-2 text-center'> Empowers our tutors with full control over their educational content and data, ensuring privacy and autonomy. 
-              For students, it offers transparent access to learning materials and verifiable credentials, fostering trust and personalized educational experiences.</p>
+            <p className='text-blue-800 mt-2 text-center'> Empowers our tutors with full control over their educational content and data. 
+              For students, it offers transparent access to learning materials and personalized educational experiences.</p>
           </div>
           
           {/* Personalized Learning Feature */}
