@@ -1,7 +1,7 @@
 
 "use client"
 
-import {Brain, Rocket, Users} from "lucide-react"
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,28 +15,7 @@ import MiniMinds from '/public/assets/images/MiniMinds-Learning-Dashboard.png';
 import kids2 from './public/assets/images/kids3.jpeg';
 //import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-
-const Features = () => {
-  const features = [
-    {
-      icon: <Brain className="w-10 h-10 text-primary" />,
-      title: "AI-Powered Learning",
-      description: "Personalized lesson suggestions based on learning style and progress",
-    },
-    {
-      icon: <Rocket className="w-10 h-10 text-primary" />,
-      title: "Learn and Earn",
-      description: "Earn Tockens as you learn and finish your Learning goals"
-    },
-    {
-
-      icon: <Users className="w-10 h-10 text-primary" />,
-      title: "Interactive Community",
-      description: "Connect with other learners and contribute to the platform's growth"
-    },
-
-  ];
-}
+import Features from '@/components/WhyMiniMinds';
 
 const LandingPage = () => {
   return (
@@ -112,27 +91,14 @@ const LandingPage = () => {
         </div>
       </div>
     
+    
     </section>
 
       {/* Why MiniMinds Section */}
-      <section id="why" className="bg-blue-200 py-12">
-      <div className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">Why Choose MiniMinds?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {Features.map((feature, index) => (
-            <div
-              key={index}
-              className="p-6 rounded-xl bg-muted hover:shadow-lg transition-shadow duration-300"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+      <Features />
+     
+      <section>
+      
 
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-purple-800 text-center mb-6">Why  Choose MiniMinds?</h2>
