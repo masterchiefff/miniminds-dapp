@@ -10,12 +10,14 @@ import tokenRewardsImg from '/public/assets/icons/rewards.png';
 import crowdfundingImg from '/public/assets/icons/crowdfunding.png';
 import progressTrackingImg from '/public/assets/icons/progress-tracking.png';
 import peerLearningImg from '/public/assets/icons/peer-learning.png';
-import Features from '@/components/Features/page';
+
 
 
 import kids2 from './public/assets/images/kids3.jpeg';
 //import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import Subjects from '@/components/Subjects/page';
+import Features from '@/components/Features/page';
 
 
 const LandingPage = () => {
@@ -94,13 +96,12 @@ const LandingPage = () => {
     
     
     </section>
+   
 
       {/* Why MiniMinds Section */}
-      <Features />
      
       <section>
-      
-
+      <Features />
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-purple-800 text-center mb-6">Why  Choose MiniMinds?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -177,6 +178,10 @@ const LandingPage = () => {
         </div>
       </div>
     </section>
+    <section>
+      <Subjects />
+    </section>
+  
 
 
      {/* Donate Section */}
