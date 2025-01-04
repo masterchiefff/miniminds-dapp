@@ -10,6 +10,8 @@ import tokenRewardsImg from '/public/assets/icons/rewards.png';
 import crowdfundingImg from '/public/assets/icons/crowdfunding.png';
 import progressTrackingImg from '/public/assets/icons/progress-tracking.png';
 import peerLearningImg from '/public/assets/icons/peer-learning.png';
+//import './global.css';
+
 
 
 
@@ -17,30 +19,20 @@ import kids2 from './public/assets/images/kids3.jpeg';
 //import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import Subjects from '@/components/Subjects/page';
-import Features from '@/components/Features/page';
-import { Button } from "@/components/ui/button";
+//import Features from '@/components/Features/page';
+import  Button  from "@/components/ui/button/page";
+import Hero from '@/components/HeroSection/page';
+import Navigation from '@/components/Navigation/page';
 
 
 const LandingPage = () => {
   return (
     <div>
-      {/* Navbar */}
-      <nav className="bg-blue-200 p-4 flex justify-between items-center">
-        <div className="text-2xl font-bold text-blue-800">MiniMinds</div>
-        <ul className="flex space-x-6 text-lg">
-          <li><a href="#features" className="text-blue-800 hover:underline">Features</a></li>
-          <li><a href="#why" className="text-blue-800 hover:underline">Why MiniMinds</a></li>
-          <li><a href="#donate" className="text-blue-800 hover:underline">Donate</a></li>
-          <li><a href="#partners" className="text-blue-800 hover:underline">Partners</a></li>
-        </ul>
-        <button className="bg-green-200 text-purple-800 px-4 py-2 rounded-lg shadow-md hover:bg-green-300">Connect Wallet</button>
-      </nav>
 
-      {/* Hero Section */}
+      { /* Hero Section */ }
+     
+      <section >
       
-      {/*<section className="min-h-full bg-yellow-300 flex flex-col-reverse md:flex-row items-center px-6 sm:px-10 py-12 md:py-0">
-      */}
-      <section className="relative overflow-hidden bg-green-200 min-h-[600px] flex items-center">
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 min-h-[600px] flex items-center">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-4 -right-4 w-72 h-72 bg-accent/30 rounded-full filter blur-3xl animate-pulse"></div>
@@ -107,7 +99,7 @@ const LandingPage = () => {
           >
             <div className="relative">
               <img
-                src="/lovable-uploads/9d06185e-e1c8-472d-b239-493176530f2a.png"
+                src="/assets/images/MiniMinds-Learning-Dashboard.png"
                 alt="MiniMinds Learning Dashboard"
                 className="rounded-2xl shadow-xl relative z-10 animate-float"
               />
@@ -118,8 +110,12 @@ const LandingPage = () => {
       </div>
     </div>
     
-    
-    </section>
+      </section>
+
+      
+      
+      
+     
    
 
       {/* Why MiniMinds Section */}

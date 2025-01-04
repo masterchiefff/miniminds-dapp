@@ -24,6 +24,27 @@ import {
   WalletDropdownDisconnect,
 } from '@coinbase/onchainkit/wallet';
 
+//import Hero from "@/components/Hero";
+
+//import Features from "@/components/Features";
+//import Subjects from "@/components/Subjects";
+
+import { useToast } from "@/components/ui/use-toast/page";
+import { useEffect } from "react";
+
+const Index = () => {
+  const Index = () => {
+    const { toast } = useToast();
+    useEffect(() => {
+      toast({
+        title: "Welcome to MiniMinds! 🚀",
+        description: "Start your learning journey today!",
+        duration: 5000,
+      });
+      });
+    };
+  }
+
 interface LoginState {
   isConnected: boolean;
   account: string | null;
