@@ -29,6 +29,7 @@ const LandingPage = () => {
   return (
     <div>
 
+     <Navigation />
       { /* Hero Section */ }
      
       <section >
