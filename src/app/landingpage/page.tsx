@@ -23,6 +23,8 @@ import Subjects from '@/components/Subjects/page';
 import  Button  from "@/components/ui/button/page";
 import Hero from '@/components/HeroSection/page';
 import Navigation from '@/components/Navigation/page';
+import SubjectsSection from '@/components/Subjects/page';
+import FAQ from '@/components/FAQ/page';
 
 
 const LandingPage = () => {
@@ -120,6 +122,7 @@ const LandingPage = () => {
    
 
       {/* Why MiniMinds Section */}
+      <Subjects />
      
       <section>
       
@@ -195,6 +198,7 @@ const LandingPage = () => {
             <h3 className="text-2xl font-bold text-purple-800 mt-4 text-center">Peer-to-Peer Learning</h3>
             <p className="text-blue-800 mt-2 text-center">Students can collaborate and learn from each other in a supportive community-driven environment.</p>
           </div>
+          
 
         </div>
       </div>
@@ -243,17 +247,8 @@ const LandingPage = () => {
 
 
       {/* Partners Section */}
-      <section id="partners" className="bg-green-200 py-12">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-purple-800">Our Partners</h2>
-          <p className="text-blue-800 text-lg mt-4">We partner with governments, NGOs, and the private sector to bring our vision to life.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
-            <img src="/assets/images/patner3.png" alt="Partner 1" className="mx-auto"/>
-            <img src="/assets/images/patner4.png" alt="Partner 2" className="mx-auto"/>
-            <img src="/assets/images/patner1.jpeg" alt="Partner 3" className="mx-auto"/>
-          </div>
-        </div>
-      </section>
+      
+      <FAQ />
 
       {/* Footer */}
       <footer className="bg-purple-200 py-6 text-center">
