@@ -1,4 +1,4 @@
-import Button  from "@/components/ui/button/page";
+import  Button  from "@/components/ui/button/page";
 import { motion } from "framer-motion";
 
 const Hero = () => {
@@ -47,12 +47,12 @@ const Hero = () => {
               transition={{ delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-sm group">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg group">
                 Start Learning
                 <span className="ml-2 group-hover:rotate-12 transition-transform">🎮</span>
               </Button>
               <Button 
-                size="sm" 
+                size="lg" 
                 variant="outline" 
                 className="border-secondary text-secondary hover:bg-secondary hover:text-white text-lg group"
               >
@@ -69,7 +69,7 @@ const Hero = () => {
           >
             <div className="relative">
               <img
-                src="/assets/images/MiniMInds-Learning-Dashboard.png"
+                src="/lovable-uploads/9d06185e-e1c8-472d-b239-493176530f2a.png"
                 alt="MiniMinds Learning Dashboard"
                 className="rounded-2xl shadow-xl relative z-10 animate-float"
               />

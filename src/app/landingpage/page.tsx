@@ -25,6 +25,7 @@ import Hero from '@/components/HeroSection/page';
 import Navigation from '@/components/Navigation/page';
 import SubjectsSection from '@/components/Subjects/page';
 import FAQ from '@/components/FAQ/page';
+import Features from '@/components/Features/page';
 
 
 const LandingPage = () => {
@@ -114,6 +115,7 @@ const LandingPage = () => {
     </div>
     
       </section>
+      <Features />
 
       
       
@@ -124,20 +126,7 @@ const LandingPage = () => {
       {/* Why MiniMinds Section */}
       <Subjects />
      
-      <section>
-      
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-purple-800 text-center mb-6">Why  Choose MiniMinds?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="text-lg text-blue-800">
-              <p>In many rural areas, teachers are overwhelmed, managing over 70 students at a time. Only the brightest receive attention, leaving many kids behind. MiniMinds provides personalized learning to ensure every child gets the education they deserve.</p>
-            </div>
-            <div className="text-lg text-blue-800">
-              <p>Our token-based system rewards students for their achievements and teachers for their contributions. Through partnerships with governments, NGOs, and the private sector, we help children access better learning tools and funding for schools.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    
 
       {/*features section */}
       <section id="features" className="bg-blue-200 py-12">
