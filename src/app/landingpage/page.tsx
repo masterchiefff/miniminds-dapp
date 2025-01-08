@@ -31,6 +31,7 @@ import FAQ from '@/components/FAQ/page';
 import Features from '@/components/Features/page';
 import FeaturesSection from '@/components/FeaturesSection/page';
 import JoinSection from '@/components/JoinSection/page';
+import DonationSection from '@/components/DonationSection/page';
 
 
 const LandingPage = () => {
@@ -140,6 +141,7 @@ const LandingPage = () => {
       <FeaturesSection />
       
       {/* Donate Section */}
+      <DonationSection />
       <FAQ />
 
       {/* Footer */}
