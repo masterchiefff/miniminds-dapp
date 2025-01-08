@@ -6,14 +6,14 @@ const subjects = [
   { name: "HTML", href: "#" },
   { name: "CSS", href: "#" },
   { name: "JavaScript", href: "#" },
-  { name: "Python", href: "#" },
+  { name: "Music", href: "#" },
   { name: "Java", href: "#" },
-  { name: "SQL", href: "#" },
+  { name: "Arts and craft", href: "#" },
   { name: "React", href: "#" },
 ];
 
 const sections = [
-  { name: "Academy", href: "#" },
+  { name: "Institution", href: "#" },
   { name: "Students", href: "#" },
   { name: "Teachers", href: "#" },
 ];
@@ -42,11 +42,12 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              <button className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors">
-                Sign Up
-              </button>
+              {/* <button className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors">
+                Connect Wallet
+              </button> */}
+              
               <button className="bg-secondary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary/90 transition-colors">
-                Log In
+              Connect Wallet
               </button>
             </div>
           </div>

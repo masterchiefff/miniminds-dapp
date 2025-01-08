@@ -9,56 +9,61 @@ const Features = () => {
           icon: <Brain className="w-12 h-12 text-[#9b87f5]" />,
           title: "AI-Powered Learning",
           description: "Personalized learning paths that adapt to each student's needs",
+          color: "from-secondary/20 to-secondary/10",
           
         },
         {
           icon: <Rocket className="w-12 h-12 text-primary" />,
           title: "Interactive Lessons",
           description: "Engaging content that makes learning fun and memorable",
+          color: "from-primary/20 to-primary/10",
           
         },
         {
           icon: <StarIcon className="w-12 h-12 text-[#FEF7CD]" />,
           title: "Reward System",
           description: "Earn stars and badges as you master new skills",
+          color: "from-accent/20 to-accent/10",
           
         },
         {
           icon: <Brain className="w-12 h-12" />,
           title: "Smart Learning Buddy",
           description: "Your AI friend that helps you learn in the most fun way!",
-          //color: "from-primary/20 to-primary/10",
+          color: "from-primary/20 to-primary/10",
           iconColor: "text-primary",
         },
         {
           icon: <Rocket className="w-12 h-12" />,
           title: "Learn & Collect",
           description: "Earn cool rewards as you master new skills!",
-          //color: "from-secondary/20 to-secondary/10",
+          color: "from-secondary/20 to-secondary/10",
           iconColor: "text-secondary",
         },
         {
           icon: <Users className="w-12 h-12" />,
           title: "Friends & Fun",
           description: "Learn together with friends from around the world!",
-          //color: "from-accent/20 to-accent/10",
+          color: "from-primary/20 to-accent/10",
           iconColor: "text-accent",
         },
         {
           icon: <BarChart className="w-12 h-12 text-[#9b87f5]" />,
           title: "Progress Tracking",
           description: "Monitor student progress with detailed analytics",
-          //color: "from-secondary/20 to-secondary/10",
+          color: "from-secondary/20 to-secondary/10",
         },
         {
           icon: <Clock className="w-12 h-12 text-primary" />,
           title: "Time-Saving Tools",
-          description: "Automated grading and lesson planning assistance"
+          description: "Automated grading and lesson planning assistance",
+          color: "from-primary/20 to-primary/10",
         },
         {
           icon: <Users className="w-12 h-12 text-[#FEF7CD]" />,
           title: "Collaborative Learning",
-          description: "Create group activities and foster peer learning"
+          description: "Create group activities and foster peer learning",
+          color: "from-secondary/20 to-secondary/10",
         }
       ];
     
@@ -89,7 +94,7 @@ const Features = () => {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ delay: index * 0.2 }}
-                          className={`flex justify-center bg-gradient-to-br  hover:scale-105 transition-transform duration-300 cursor-pointer group`}
+                          className={`flex justify-center bg-gradient-to-br ${ feature.color } hover:scale-105 transition-transform duration-300 cursor-pointer group`}
 
                           >
                             <Card className="h-full hover:shadow-lg transition-all hover:-translate-y-2  backdrop-blur-sm">

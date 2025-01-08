@@ -53,7 +53,7 @@ const LandingPage = () => {
      
       <section >
       
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10 min-h-[600px] flex items-center">
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/10 min-h-[600px] flex items-center">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-4 -right-4 w-72 h-72 bg-accent/30 rounded-full filter blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-8 -left-8 w-72 h-72 bg-primary/30 rounded-full filter blur-3xl animate-pulse delay-700"></div>
@@ -76,7 +76,7 @@ const LandingPage = () => {
               className="text-4xl md:text-6xl font-bold"
             >
               Welcome to{" "}
-              <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-purple-400 to-green-400 bg-clip-text text-transparent">
                 Mini
               </span>
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
@@ -97,14 +97,14 @@ const LandingPage = () => {
               transition={{ delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg group">
+              <Button size="lg" className="bg-green-400 hover:bg-green-500 text-lg group">
                 Start Learning
                 <span className="ml-2 group-hover:rotate-12 transition-transform">🎮</span>
               </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-secondary text-secondary hover:bg-secondary hover:text-white text-lg group"
+                className="border-purple-500 text-purple-500 hover:bg-purple-600 hover:text-white text-lg group"
               >
                 Become a Teacher
                 <span className="ml-2 group-hover:rotate-12 transition-transform">📚</span>
