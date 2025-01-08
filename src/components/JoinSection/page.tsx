@@ -6,13 +6,28 @@ const JoinSection = () => {
   return (
     <section className="py-24 overflow-hidden">
        <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl md:text-4xl font-bold text-center mb-4"
+            >
+               Discover Your Place with { " "}
+              <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                Mini
+              </span>
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Minds! 
+              </span>
+            </motion.h2>
+            {/*
+            <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-3xl md:text-4xl font-bold text-center mb-4"
         >
           Discover your place with Miniminds! 🌈
-        </motion.h2>
+        </motion.h2> */}
+       
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,13 +60,7 @@ const JoinSection = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute top-0 bottom-20 left-64 w-56 h-56 bg-[#FFD60A] rounded-full overflow-hidden">
-              <img 
-                src="./assets/images/teacher3.avif" 
-                alt="Student 2"
-                className="w-full h-full object-cover"
-              />
-            </div>
+           
             <motion.div 
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -79,7 +88,7 @@ const JoinSection = () => {
               className="space-y-6"
             >
               <span className="text-sm text-left font-medium text-secondary  tracking-wider">TEACHERS</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <h2 className="text-4xl md:text-4xl font-bold text-purple-900">
                 Differentiate your classroom and engage every student.
               </h2>
               <p className="text-lg  text-gray-600">
@@ -89,7 +98,7 @@ const JoinSection = () => {
               </p>
               <Button 
                 size="lg"
-                className="bg-secondary hover:bg-secondary/90 text-white rounded-xl px-8 py-2 text-lg"
+                className="bg-purple-600 hover:bg-purple-800 text-white rounded-xl px-8 py-2 text-lg"
               >
                 <GraduationCap className="w-6 h-6 mr-2" />
                 Teachers, start here
@@ -113,7 +122,7 @@ const JoinSection = () => {
               className="space-y-6"
             >
               <span className="text-sm font-medium text-primary tracking-wider">LEARNERS AND STUDENTS</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <h2 className="text-4xl md:text-5xl font-bold text-green-900">
                 Learn at your own pace, anytime and anywhere.
               </h2>
               <p className="text-lg text-gray-600">
@@ -123,7 +132,7 @@ const JoinSection = () => {
               </p>
               <Button 
                 size="lg"
-                className="bg-pink hover:bg-primary/90 text-white rounded-full px-10 py-2 text-lg"
+                className="bg-green-400 hover:bg-green-600 text-white rounded-full px-10 py-2 text-lg"
               >
                 <School className="w-6 h-6 mr-2" />
                 Start learning now
@@ -176,7 +185,7 @@ const JoinSection = () => {
             </div>
             <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#FFD60A] rounded-full overflow-hidden">
               <img 
-                src="./assets/images/teacher5.jpeg" 
+                src="./assets/images/teacher4.avif" 
                 alt="Institution 2"
                 className="w-full h-full object-cover"
               />
@@ -199,7 +208,7 @@ const JoinSection = () => {
               className="space-y-6"
             >
               <span className="text-sm font-medium text-accent tracking-wider">INSTITUTIONS</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
+              <h2 className="text-4xl md:text-5xl font-bold text-yellow-400">
                 Transform education at scale with MiniMinds.
               </h2>
               <p className="text-lg text-gray-600">
@@ -210,7 +219,7 @@ const JoinSection = () => {
               </p>
               <Button 
                 size="lg"
-                className="bg-accent hover:bg-accent/90 text-black rounded-full px-8 py-6 text-lg"
+                className="bg-yellow-300 hover:bg-yellow-400 text-black rounded-full px-4 py-2 text-lg"
               >
                 <Users className="w-6 h-6 mr-2" />
                 Partner with us

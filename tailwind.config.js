@@ -24,7 +24,10 @@ module.exports = {
       colors: {
         primary: {
           DEFAULT: "#4CD964", // Mint green
+          45: "#32c150",
           foreground: "#FFFFFF",
+          //10: "#E6F6EA",
+          //20: "#C2EED1",
         },
         secondary: {
           DEFAULT: "#8A4FFF", // Purple

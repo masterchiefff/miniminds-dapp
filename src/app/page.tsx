@@ -6,7 +6,7 @@ import Web3 from 'web3';
 import SessionLayout from '@/components/Layouts/sessionLayout';
 import userRegistrationABI from '@/contracts/UserRegistrationABI.json';
 import Link from 'next/link';
-import { ToastContainer } from 'react-toastify';
+
 
 import {
   Address,
@@ -32,19 +32,8 @@ import {
 import { useToast } from "@/components/ui/use-toast/page";
 import { useEffect } from "react";
 
-const Index = () => {
-  const Index = () => {
-    const { toast } = useToast();
-    useEffect(() => {
-      toast({
-        title: "Welcome to MiniMinds! 🚀",
-        description: "Start your learning journey today!",
-        duration: 5000,
-      });
-      });
-    };
-  }
 
+  
 interface LoginState {
   isConnected: boolean;
   account: string | null;

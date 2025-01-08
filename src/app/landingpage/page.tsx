@@ -3,6 +3,8 @@
 
 
 import React from 'react';
+import { useToast } from '@/components/ui/use-toast/page';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import personalizedLearningImg from '/public/assets/icons/personalized-learning.png';
@@ -10,6 +12,7 @@ import tokenRewardsImg from '/public/assets/icons/rewards.png';
 import crowdfundingImg from '/public/assets/icons/crowdfunding.png';
 import progressTrackingImg from '/public/assets/icons/progress-tracking.png';
 import peerLearningImg from '/public/assets/icons/peer-learning.png';
+import { ToastContainer } from 'react-toastify';
 //import './global.css';
 
 
@@ -31,6 +34,16 @@ import JoinSection from '@/components/JoinSection/page';
 
 
 const LandingPage = () => {
+  const Index = () => {
+      const { toast } = useToast();
+      useEffect(() => {
+        toast({
+          title: "Welcome to MiniMinds! 🚀",
+          description: "Start your learning journey today!",
+          duration: 5000,
+        });
+        });
+    };
   return (
     <div>
 
@@ -118,10 +131,11 @@ const LandingPage = () => {
     
       </section>
       
-      <Features />
+      
       {/* Why MiniMinds Section */}
       <Subjects />
       <JoinSection />
+      <Features />
       {/*features section */}
       <FeaturesSection />
       
@@ -129,9 +143,16 @@ const LandingPage = () => {
       <FAQ />
 
       {/* Footer */}
-      <footer className="bg-purple-200 py-6 text-center">
-        <p className="text-blue-800">&copy; {new Date().getFullYear()} MiniMinds. All Rights Reserved.</p>
-      </footer>
+      <footer className=" bg-gradient-to-br from-primary/5 to-secondary/30 text-white py-10">
+  
+    {/* About Section */}
+   
+
+    
+  //<div className="mt-10 text-center border-t border-gray-700 pt-6">
+    <p className="text-gray-400">&copy; {new Date().getFullYear()} MiniMinds. All Rights Reserved.</p>
+  </div>
+</footer>
     </div>
   );
 };
