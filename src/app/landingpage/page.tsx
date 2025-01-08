@@ -27,6 +27,7 @@ import SubjectsSection from '@/components/Subjects/page';
 import FAQ from '@/components/FAQ/page';
 import Features from '@/components/Features/page';
 import FeaturesSection from '@/components/FeaturesSection/page';
+import JoinSection from '@/components/JoinSection/page';
 
 
 const LandingPage = () => {
@@ -120,6 +121,7 @@ const LandingPage = () => {
       <Features />
       {/* Why MiniMinds Section */}
       <Subjects />
+      <JoinSection />
       {/*features section */}
       <FeaturesSection />
       
