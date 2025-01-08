@@ -5,32 +5,49 @@ import { GraduationCap, Users, School } from "lucide-react";
 const JoinSection = () => {
   return (
     <section className="py-24 overflow-hidden">
-      <div className="container mx-auto px-4 bg-gradient-to-br from-muted/50 to-secondary/10">
+       <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-3xl md:text-4xl font-bold text-center mb-4"
+        >
+          Discover your place with Miniminds! 🌈
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-center text-gray-600 mb-12 max-w-2xl mx-auto"
+        >
+          Empowering Teachers, Students and Institutions!
+        </motion.p>
+      <div className="container mx-auto px-2 ">
         {/* Teachers Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row items-center gap-12 mb-60"
+          className="flex flex-col md:flex-row place-items-baseline gap-12 mb-60"
         >
-          <div className="relative flex-1 hidden md:block">
+          <div className="relative flex-1 items-center hidden md:block">
             <div className="absolute top-0 left-0 w-72 h-72 bg-[#4CD964] rounded-full  overflow-hidden">
               <img 
-                src="/placeholder.svg" 
+                src="./assets/images/teacher1.avif" 
                 alt="Teacher"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="absolute top-40 left-40 w-64 h-64 bg-[#8A4FFF] rounded-full overflow-hidden">
               <img 
-                src="/placeholder.svg" 
+                src="./assets/images/teacher4.avif" 
                 alt="Student 1"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute top-20 left-64 w-56 h-56 bg-[#FFD60A] rounded-full overflow-hidden">
+            <div className="absolute top-0 bottom-20 left-64 w-56 h-56 bg-[#FFD60A] rounded-full overflow-hidden">
               <img 
-                src="/placeholder.svg" 
+                src="./assets/images/teacher3.avif" 
                 alt="Student 2"
                 className="w-full h-full object-cover"
               />
@@ -54,19 +71,21 @@ const JoinSection = () => {
               </svg>
             </motion.div>
           </div>
-          <div className="flex-1 text-left">
+          <div className="flex-1 p-6 items-center text-left">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="space-y-6"
             >
-              <span className="text-sm text-left font-medium text-secondary tracking-wider">TEACHERS</span>
+              <span className="text-sm text-left font-medium text-secondary  tracking-wider">TEACHERS</span>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
                 Differentiate your classroom and engage every student.
               </h2>
-              <p className="text-lg text-gray-600">
+              <p className="text-lg  text-gray-600">
                 We empower teachers to support their entire classroom. 90% of teachers who have used MiniMinds have found us effective.
+                Monitor each student's progress and provide real-time feedback.
+                Post assignments, quizzes, and more to keep students engaged . Earn as you teach, create and sell courses to a global audience.
               </p>
               <Button 
                 size="lg"
@@ -99,10 +118,12 @@ const JoinSection = () => {
               </h2>
               <p className="text-lg text-gray-600">
                 Join millions of students worldwide who are mastering new skills and achieving their learning goals with MiniMinds.
+                Get rewarded with tokens for every course you complete. Use tokens to unlock premium courses.
+                You can also earn tokens by referring friends to MiniMinds.
               </p>
               <Button 
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 py-2 text-lg"
+                className="bg-pink hover:bg-primary/90 text-white rounded-full px-10 py-2 text-lg"
               >
                 <School className="w-6 h-6 mr-2" />
                 Start learning now
@@ -111,16 +132,16 @@ const JoinSection = () => {
           </div>
           <div className="relative flex-1 hidden md:block min-h-[400px]">
             {/* Similar circular image layout with different colors */}
-            <div className="absolute top-0 right-0 w-72 h-72 bg-[#FFD60A] rounded-full overflow-hidden">
+            <div className="absolute top-0 right-0 w-72 h-72 bg-[#fa6ccf] rounded-full overflow-hidden">
               <img 
-                src="/placeholder.svg" 
+                src="./assets/images/student3.jpg" 
                 alt="Student 3"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#4CD964] rounded-full overflow-hidden">
+            <div className="absolute bottom-0 left-0 w-70 h-70 bg-[#4CD964] rounded-full overflow-hidden">
               <img 
-                src="/placeholder.svg" 
+                src="./assets/images/student4.jpg" 
                 alt="Student 4"
                 className="w-full h-full object-cover"
               />
@@ -148,14 +169,14 @@ const JoinSection = () => {
             {/* Similar circular image layout with different colors */}
             <div className="absolute top-0 left-20 w-72 h-72 bg-[#8A4FFF] rounded-full overflow-hidden">
               <img 
-                src="/placeholder.svg" 
+                src="./assets/images/student2.jpg" 
                 alt="Institution 1"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#FFD60A] rounded-full overflow-hidden">
               <img 
-                src="/placeholder.svg" 
+                src="./assets/images/teacher5.jpeg" 
                 alt="Institution 2"
                 className="w-full h-full object-cover"
               />
@@ -183,6 +204,9 @@ const JoinSection = () => {
               </h2>
               <p className="text-lg text-gray-600">
                 Partner with us to bring innovative learning solutions to your institution and create lasting impact.
+                We provide tools to help you manage your institution, monitor student progress, and track performance.
+                We also provide a platform for you to create and sell courses to a global audience.
+
               </p>
               <Button 
                 size="lg"
