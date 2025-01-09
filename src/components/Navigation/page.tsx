@@ -1,6 +1,8 @@
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu/page";
 //import { cn } from "@/lib/utils";
 import React from "react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const subjects = [
   { name: "HTML", href: "#" },
@@ -19,6 +21,8 @@ const sections = [
 ];
 
 const Navigation = () => {
+  
+
   return (
     <div className="w-full">
       {/* Main Navigation */}
@@ -46,7 +50,9 @@ const Navigation = () => {
                 Connect Wallet
               </button> */}
               
-              <button className="bg-secondary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary/90 transition-colors">
+              <button 
+             
+              className="bg-secondary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary/90 transition-colors">
               Connect Wallet
               </button>
             </div>

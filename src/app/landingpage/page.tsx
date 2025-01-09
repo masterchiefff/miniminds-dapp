@@ -5,14 +5,10 @@
 import React from 'react';
 import { useToast } from '@/components/ui/use-toast/page';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import personalizedLearningImg from '/public/assets/icons/personalized-learning.png';
-import tokenRewardsImg from '/public/assets/icons/rewards.png';
-import crowdfundingImg from '/public/assets/icons/crowdfunding.png';
-import progressTrackingImg from '/public/assets/icons/progress-tracking.png';
-import peerLearningImg from '/public/assets/icons/peer-learning.png';
-import { ToastContainer } from 'react-toastify';
+
 //import './global.css';
 
 
@@ -35,18 +31,23 @@ import DonationSection from '@/components/DonationSection/page';
 
 
 const LandingPage = () => {
-  const Index = () => {
-      const { toast } = useToast();
-      useEffect(() => {
-        toast({
-          title: "Welcome to MiniMinds! 🚀",
-          description: "Start your learning journey today!",
-          duration: 5000,
-        });
-        });
-    };
+  //initialize the router
+  const { toast } = useToast();
+  const router = useRouter();
+
+  useEffect(() => {
+    toast({
+      title: "Welcome to MiniMinds! 🚀",
+      description: "Start your learning journey today!",
+      duration: 5000,
+    });
+  }, []); 
+  
+
+    
   return (
     <div>
+
 
      <Navigation />
       { /* Hero Section */ }
@@ -97,11 +98,16 @@ const LandingPage = () => {
               transition={{ delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button size="lg" className="bg-green-400 hover:bg-green-500 text-lg group">
+              <Button 
+               onClick={() => router.push('/login')}
+
+              size="lg" className="bg-green-400 hover:bg-green-500 text-lg group">
                 Start Learning
                 <span className="ml-2 group-hover:rotate-12 transition-transform">🎮</span>
               </Button>
               <Button 
+
+              onClick={() => router.push('/sign-up')}
                 size="lg" 
                 variant="outline" 
                 className="border-purple-500 text-purple-500 hover:bg-purple-600 hover:text-white text-lg group"
