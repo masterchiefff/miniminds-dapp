@@ -1,16 +1,14 @@
 import './globals.css'
+import '@coinbase/onchainkit/styles.css'
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { headers } from 'next/headers'
 import { type ReactNode } from 'react'
 import { cookieToInitialState } from 'wagmi'
-
-
-
 import { getConfig } from '../wagmi'
 import { Providers } from './providers'
 
-import '@coinbase/onchainkit/styles.css';
 //import LandingPage from './landingpage/page'
 
 const inter = Inter({ subsets: ['latin'] })
