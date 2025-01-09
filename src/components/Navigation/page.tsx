@@ -4,6 +4,8 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+//import { OnchainKitProvider, useOnchainKit } from "@coinbase/onchainkit";
+
 const subjects = [
   { name: "HTML", href: "#" },
   { name: "CSS", href: "#" },
@@ -19,6 +21,8 @@ const sections = [
   { name: "Students", href: "#" },
   { name: "Teachers", href: "#" },
 ];
+
+
 
 const Navigation = () => {
   
